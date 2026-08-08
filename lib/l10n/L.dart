@@ -737,6 +737,46 @@ class L {
         );
   }
 
+  String get settings_language_label {
+    return message('settings_language_label') ??
+        Intl.message(
+          'Language',
+          name: 'settings_language_label',
+          desc: 'Settings option label for choosing the display language',
+          locale: localeName,
+        );
+  }
+
+  String get settings_language_system {
+    return message('settings_language_system') ??
+        Intl.message(
+          'Follow system',
+          name: 'settings_language_system',
+          desc: 'Language option: use the device language',
+          locale: localeName,
+        );
+  }
+
+  String get settings_language_english {
+    return message('settings_language_english') ??
+        Intl.message(
+          'English',
+          name: 'settings_language_english',
+          desc: 'Language option: English',
+          locale: localeName,
+        );
+  }
+
+  String get settings_language_chinese {
+    return message('settings_language_chinese') ??
+        Intl.message(
+          'Chinese',
+          name: 'settings_language_chinese',
+          desc: 'Language option: Simplified Chinese',
+          locale: localeName,
+        );
+  }
+
   String get label_opml_importing {
     return message('label_opml_importing') ??
         Intl.message(

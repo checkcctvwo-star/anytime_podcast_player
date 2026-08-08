@@ -13,6 +13,10 @@ abstract class SettingsService {
 
   set theme(String mode);
 
+  String get language;
+
+  set language(String value);
+
   bool get markDeletedEpisodesAsPlayed;
 
   set markDeletedEpisodesAsPlayed(bool value);

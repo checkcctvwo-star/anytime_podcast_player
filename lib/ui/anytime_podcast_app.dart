@@ -14,6 +14,7 @@ import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/feed.dart';
@@ -157,6 +158,19 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
     });
   }
 
+  /// Maps the stored language setting to a Flutter [Locale]. Returns null to
+  /// follow the device language (system default).
+  Locale? _localeFor(AppSettings? settings) {
+    switch (settings?.language) {
+      case 'en':
+        return const Locale('en');
+      case 'zh':
+        return const Locale('zh_Hans');
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -211,11 +225,17 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
           dispose: (_, value) => value.dispose(),
         )
       ],
-      child: MaterialApp(
+      child: StreamBuilder<AppSettings>(
+        stream: widget.settingsBloc?.settings,
+        initialData: AppSettings.sensibleDefaults(),
+        builder: (context, snapshot) {
+          final appLocale = _localeFor(snapshot.data);
+          return MaterialApp(
         debugShowCheckedModeBanner: false,
         showSemanticsDebugger: false,
         title: 'Anytime Podcast Player',
         navigatorObservers: [NavigationRouteObserver()],
+        locale: appLocale,
         localizationsDelegates: const <LocalizationsDelegate<Object>>[
           AnytimeLocalisationsDelegate(),
           GlobalMaterialLocalizations.delegate,
@@ -238,6 +258,8 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         // Uncomment builder below to enable accessibility checker tool.
         // builder: (context, child) => AccessibilityTools(child: child),
         home: const AnytimeHomePage(title: 'Anytime Podcast Player'),
+          );
+        },
       ),
     );
   }

@@ -36,6 +36,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _backgroundUpdate = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _backgroundUpdateMobileData = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _updateNotification = BehaviorSubject<bool>();
+  final BehaviorSubject<String> _language = BehaviorSubject<String>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -57,6 +58,7 @@ class SettingsBloc extends Bloc {
 
     _currentSettings = AppSettings(
       theme: settingsService.theme,
+      language: settingsService.language,
       markDeletedEpisodesAsPlayed: settingsService.markDeletedEpisodesAsPlayed,
       deleteDownloadedPlayedEpisodes: settingsService.deleteDownloadedPlayedEpisodes,
       storeDownloadsSDCard: settingsService.storeDownloadsSDCard,
@@ -85,6 +87,12 @@ class SettingsBloc extends Bloc {
       _currentSettings = _currentSettings.copyWith(theme: mode);
       _settings.add(_currentSettings);
       settingsService.theme = mode;
+    });
+
+    _language.listen((String language) {
+      _currentSettings = _currentSettings.copyWith(language: language);
+      _settings.add(_currentSettings);
+      settingsService.language = language;
     });
 
     _markDeletedAsPlayed.listen((bool mark) {
@@ -227,6 +235,8 @@ class SettingsBloc extends Bloc {
   Stream<AppSettings> get settings => _settings.stream;
 
   void Function(String) get theme => _theme.add;
+
+  void Function(String) get setLanguage => _language.add;
 
   void Function(bool) get storeDownloadonSDCard => _storeDownloadOnSDCard.add;
 

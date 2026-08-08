@@ -8,6 +8,9 @@ class AppSettings {
   /// The current theme name.
   final String theme;
 
+  /// The display language: 'system' (follow device), 'en' or 'zh'.
+  final String language;
+
   /// True if episodes are marked as played when deleted.
   final bool markDeletedEpisodesAsPlayed;
 
@@ -70,6 +73,7 @@ class AppSettings {
 
   AppSettings({
     required this.theme,
+    required this.language,
     required this.markDeletedEpisodesAsPlayed,
     required this.deleteDownloadedPlayedEpisodes,
     required this.storeDownloadsSDCard,
@@ -94,6 +98,7 @@ class AppSettings {
 
   AppSettings.sensibleDefaults()
       : theme = 'dark',
+        language = 'system',
         markDeletedEpisodesAsPlayed = false,
         deleteDownloadedPlayedEpisodes = false,
         storeDownloadsSDCard = false,
@@ -117,6 +122,7 @@ class AppSettings {
 
   AppSettings copyWith({
     String? theme,
+    String? language,
     String? selectedTheme,
     bool? markDeletedEpisodesAsPlayed,
     bool? deleteDownloadedPlayedEpisodes,
@@ -141,6 +147,7 @@ class AppSettings {
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
+        language: language ?? this.language,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed ?? this.markDeletedEpisodesAsPlayed,
         deleteDownloadedPlayedEpisodes: deleteDownloadedPlayedEpisodes ?? this.deleteDownloadedPlayedEpisodes,
         storeDownloadsSDCard: storeDownloadsSDCard ?? this.storeDownloadsSDCard,
