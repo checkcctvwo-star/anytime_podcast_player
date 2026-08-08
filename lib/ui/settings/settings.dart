@@ -124,6 +124,16 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_convert_to_mp3_label),
+                  subtitle: Text(L.of(context)!.settings_convert_to_mp3_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.convertToMp3,
+                    onChanged: (value) => setState(() => settingsBloc.convertToMp3(value)),
+                  ),
+                ),
+              ),
               SettingsDividerLabel(label: L.of(context)!.settings_podcast_management_divider_label),
               const EpisodeRefreshWidget(),
               MergeSemantics(

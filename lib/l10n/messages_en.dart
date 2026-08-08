@@ -249,6 +249,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_background_refresh_option_subtitle': MessageLookupByLibrary.simpleMessage('Refresh episodes when the screen is off. This will increase battery usage.'),
     'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('Continuous play'),
     'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('Automatically play the next episode in the podcast if the queue is empty'),
+    'settings_convert_to_mp3_label': MessageLookupByLibrary.simpleMessage('Convert to MP3'),
+    'settings_convert_to_mp3_subtitle': MessageLookupByLibrary.simpleMessage('Automatically convert downloaded episodes to MP3'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('DATA'),
     'settings_delete_played_label': MessageLookupByLibrary.simpleMessage('Delete downloaded episodes once played'),
     'settings_download_sd_card_label': MessageLookupByLibrary.simpleMessage('Download episodes to SD card'),

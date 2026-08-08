@@ -249,6 +249,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_background_refresh_option_subtitle': MessageLookupByLibrary.simpleMessage('在屏幕关闭时刷新单集。这会增加电量消耗。'),
     'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('连续播放'),
     'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('队列为空时自动播放该播客的下一集'),
+    'settings_convert_to_mp3_label': MessageLookupByLibrary.simpleMessage('转成 MP3'),
+    'settings_convert_to_mp3_subtitle': MessageLookupByLibrary.simpleMessage('自动将下载的单集转成 MP3'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('数据'),
     'settings_delete_played_label': MessageLookupByLibrary.simpleMessage('已下载的剧集播放后删除'),
     'settings_download_sd_card_label': MessageLookupByLibrary.simpleMessage('下载单集到 SD 卡'),

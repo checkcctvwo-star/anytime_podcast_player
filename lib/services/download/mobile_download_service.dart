@@ -16,6 +16,8 @@ import 'package:anytime/services/audio/mp3_converter_service.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/services/settings/mobile_settings_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
@@ -35,11 +37,16 @@ class MobileDownloadService extends DownloadService {
   /// substitute a fake; defaults to the real ffmpeg-backed converter.
   final Mp3ConverterService audioConverter;
 
+  /// Reads user settings (e.g. whether to convert to MP3). When null, the
+  /// shared settings singleton is used.
+  final SettingsService? settingsService;
+
   MobileDownloadService({
     required this.repository,
     required this.downloadManager,
     required this.podcastService,
     Mp3ConverterService? audioConverter,
+    this.settingsService,
   }) : audioConverter = audioConverter ?? Mp3ConverterService(FFmpegAudioConverterRunner()) {
     downloadManager.downloadProgress.pipe(downloadProgress);
     downloadProgress.listen((progress) {
@@ -166,15 +173,22 @@ class MobileDownloadService extends DownloadService {
         episode.downloadState = progress.status;
 
         if (progress.status == DownloadState.downloaded && progress.percentage == 100) {
-          // Ensure the downloaded file is an MP3. If it was downloaded as
-          // another format (e.g. m4a/aac) it is transcoded and the original
-          // removed, so `filename` now points at the MP3.
-          var filename = await audioConverter.ensureMp3(await resolvePath(episode));
+          var filename = await resolvePath(episode);
 
-          // Keep the stored episode filename in sync if conversion changed it.
-          final newBase = filename.split(Platform.isWindows ? '\\' : '/').last;
-          if (episode.filename != newBase) {
-            episode.filename = newBase;
+          final settings = settingsService ?? await MobileSettingsService.instance();
+
+          // If the user has enabled auto MP3 conversion, ensure the downloaded
+          // file is an MP3. Otherwise (m4a/aac) it is transcoded and the
+          // original removed, so `filename` now points at the MP3. When the
+          // setting is off we keep the file exactly as downloaded.
+          if (settings?.convertToMp3 ?? true) {
+            filename = await audioConverter.ensureMp3(filename);
+
+            // Keep the stored episode filename in sync if conversion changed it.
+            final newBase = filename.split(Platform.isWindows ? '\\' : '/').last;
+            if (episode.filename != newBase) {
+              episode.filename = newBase;
+            }
           }
 
           try {

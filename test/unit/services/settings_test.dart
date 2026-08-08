@@ -65,6 +65,14 @@ void main() {
     expect(mobileSettingsService?.searchProvider, 'itunes');
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
+  test('Test language', () async {
+    expect(mobileSettingsService?.language, 'system');
+    expectLater(settingsListener, emits('language'));
+    // Key not set so should still return system.
+    mobileSettingsService?.language = 'zh';
+    expect(mobileSettingsService?.language, 'zh');
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
   test('Test external link consent', () async {
     expect(mobileSettingsService?.externalLinkConsent, false);
     expectLater(settingsListener, emits('elconsent'));

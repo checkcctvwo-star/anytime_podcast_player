@@ -11,6 +11,9 @@ class AppSettings {
   /// The display language: 'system' (follow device), 'en' or 'zh'.
   final String language;
 
+  /// True if downloaded episodes are automatically transcoded to MP3.
+  final bool convertToMp3;
+
   /// True if episodes are marked as played when deleted.
   final bool markDeletedEpisodesAsPlayed;
 
@@ -74,6 +77,7 @@ class AppSettings {
   AppSettings({
     required this.theme,
     required this.language,
+    required this.convertToMp3,
     required this.markDeletedEpisodesAsPlayed,
     required this.deleteDownloadedPlayedEpisodes,
     required this.storeDownloadsSDCard,
@@ -99,6 +103,7 @@ class AppSettings {
   AppSettings.sensibleDefaults()
       : theme = 'dark',
         language = 'system',
+        convertToMp3 = true,
         markDeletedEpisodesAsPlayed = false,
         deleteDownloadedPlayedEpisodes = false,
         storeDownloadsSDCard = false,
@@ -123,6 +128,7 @@ class AppSettings {
   AppSettings copyWith({
     String? theme,
     String? language,
+    bool? convertToMp3,
     String? selectedTheme,
     bool? markDeletedEpisodesAsPlayed,
     bool? deleteDownloadedPlayedEpisodes,
@@ -148,6 +154,7 @@ class AppSettings {
       AppSettings(
         theme: theme ?? this.theme,
         language: language ?? this.language,
+        convertToMp3: convertToMp3 ?? this.convertToMp3,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed ?? this.markDeletedEpisodesAsPlayed,
         deleteDownloadedPlayedEpisodes: deleteDownloadedPlayedEpisodes ?? this.deleteDownloadedPlayedEpisodes,
         storeDownloadsSDCard: storeDownloadsSDCard ?? this.storeDownloadsSDCard,

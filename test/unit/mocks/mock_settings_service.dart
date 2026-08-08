@@ -56,6 +56,9 @@ class MockSettingsService extends SettingsService {
   String language = 'system';
 
   @override
+  bool convertToMp3 = true;
+
+  @override
   bool trimSilence = false;
 
   @override

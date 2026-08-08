@@ -1509,5 +1509,17 @@
     "description": "Settings display language option",
     "type": "text",
     "placeholders": {}
+  },
+  "settings_convert_to_mp3_label": "Convert to MP3",
+  "@settings_convert_to_mp3_label": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_convert_to_mp3_subtitle": "Automatically convert downloaded episodes to MP3",
+  "@settings_convert_to_mp3_subtitle": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
   }
 }

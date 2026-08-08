@@ -78,6 +78,16 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  bool get convertToMp3 => _sharedPreferences.getBool('convertmp3') ?? true;
+
+  @override
+  set convertToMp3(bool value) {
+    _sharedPreferences.setBool('convertmp3', value);
+
+    settingsNotifier.sink.add('convertmp3');
+  }
+
+  @override
   set playbackSpeed(double playbackSpeed) {
     _sharedPreferences.setDouble('speed', playbackSpeed);
     settingsNotifier.sink.add('speed');

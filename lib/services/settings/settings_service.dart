@@ -17,6 +17,10 @@ abstract class SettingsService {
 
   set language(String value);
 
+  bool get convertToMp3;
+
+  set convertToMp3(bool value);
+
   bool get markDeletedEpisodesAsPlayed;
 
   set markDeletedEpisodesAsPlayed(bool value);

@@ -777,6 +777,26 @@ class L {
         );
   }
 
+  String get settings_convert_to_mp3_label {
+    return message('settings_convert_to_mp3_label') ??
+        Intl.message(
+          'Convert to MP3',
+          name: 'settings_convert_to_mp3_label',
+          desc: 'Settings option: auto-convert downloaded episodes to MP3',
+          locale: localeName,
+        );
+  }
+
+  String get settings_convert_to_mp3_subtitle {
+    return message('settings_convert_to_mp3_subtitle') ??
+        Intl.message(
+          'Automatically convert downloaded episodes to MP3',
+          name: 'settings_convert_to_mp3_subtitle',
+          desc: 'Subtitle for the auto MP3 conversion setting',
+          locale: localeName,
+        );
+  }
+
   String get label_opml_importing {
     return message('label_opml_importing') ??
         Intl.message(

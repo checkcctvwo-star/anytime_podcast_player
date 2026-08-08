@@ -37,6 +37,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _backgroundUpdateMobileData = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _updateNotification = BehaviorSubject<bool>();
   final BehaviorSubject<String> _language = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _convertToMp3 = BehaviorSubject<bool>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -59,6 +60,7 @@ class SettingsBloc extends Bloc {
     _currentSettings = AppSettings(
       theme: settingsService.theme,
       language: settingsService.language,
+      convertToMp3: settingsService.convertToMp3,
       markDeletedEpisodesAsPlayed: settingsService.markDeletedEpisodesAsPlayed,
       deleteDownloadedPlayedEpisodes: settingsService.deleteDownloadedPlayedEpisodes,
       storeDownloadsSDCard: settingsService.storeDownloadsSDCard,
@@ -93,6 +95,12 @@ class SettingsBloc extends Bloc {
       _currentSettings = _currentSettings.copyWith(language: language);
       _settings.add(_currentSettings);
       settingsService.language = language;
+    });
+
+    _convertToMp3.listen((bool convert) {
+      _currentSettings = _currentSettings.copyWith(convertToMp3: convert);
+      _settings.add(_currentSettings);
+      settingsService.convertToMp3 = convert;
     });
 
     _markDeletedAsPlayed.listen((bool mark) {
@@ -237,6 +245,8 @@ class SettingsBloc extends Bloc {
   void Function(String) get theme => _theme.add;
 
   void Function(String) get setLanguage => _language.add;
+
+  void Function(bool) get convertToMp3 => _convertToMp3.add;
 
   void Function(bool) get storeDownloadonSDCard => _storeDownloadOnSDCard.add;
 

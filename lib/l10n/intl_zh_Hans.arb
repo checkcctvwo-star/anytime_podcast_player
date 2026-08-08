@@ -1507,5 +1507,17 @@
     "description": "Settings display language option",
     "type": "text",
     "placeholders": {}
+  },
+  "settings_convert_to_mp3_label": "转成 MP3",
+  "@settings_convert_to_mp3_label": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_convert_to_mp3_subtitle": "自动将下载的单集转成 MP3",
+  "@settings_convert_to_mp3_subtitle": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
   }
 }
