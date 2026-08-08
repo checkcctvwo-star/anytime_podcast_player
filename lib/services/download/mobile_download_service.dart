@@ -11,6 +11,8 @@ import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
+import 'package:anytime/services/audio/ffmpeg_audio_converter_runner.dart';
+import 'package:anytime/services/audio/mp3_converter_service.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
@@ -29,7 +31,16 @@ class MobileDownloadService extends DownloadService {
   final DownloadManager downloadManager;
   final PodcastService podcastService;
 
-  MobileDownloadService({required this.repository, required this.downloadManager, required this.podcastService}) {
+  /// Ensures downloaded episodes are saved as MP3. Injected so tests can
+  /// substitute a fake; defaults to the real ffmpeg-backed converter.
+  final Mp3ConverterService audioConverter;
+
+  MobileDownloadService({
+    required this.repository,
+    required this.downloadManager,
+    required this.podcastService,
+    Mp3ConverterService? audioConverter,
+  }) : audioConverter = audioConverter ?? Mp3ConverterService(FFmpegAudioConverterRunner()) {
     downloadManager.downloadProgress.pipe(downloadProgress);
     downloadProgress.listen((progress) {
       _updateDownloadProgress(progress);
@@ -155,7 +166,16 @@ class MobileDownloadService extends DownloadService {
         episode.downloadState = progress.status;
 
         if (progress.status == DownloadState.downloaded && progress.percentage == 100) {
-          final filename = await resolvePath(episode);
+          // Ensure the downloaded file is an MP3. If it was downloaded as
+          // another format (e.g. m4a/aac) it is transcoded and the original
+          // removed, so `filename` now points at the MP3.
+          var filename = await audioConverter.ensureMp3(await resolvePath(episode));
+
+          // Keep the stored episode filename in sync if conversion changed it.
+          final newBase = filename.split(Platform.isWindows ? '\\' : '/').last;
+          if (episode.filename != newBase) {
+            episode.filename = newBase;
+          }
 
           try {
             var mp3Info = MP3Processor.fromFile(File(filename));
