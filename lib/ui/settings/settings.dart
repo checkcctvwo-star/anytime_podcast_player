@@ -80,30 +80,42 @@ class _SettingsState extends State<Settings> {
                       onChanged: (value) => setState(() => settingsBloc.deleteDownloadedPlayedEpisodes(value)),
                     )),
               ),
-              sdcard
-                  ? MergeSemantics(
-                      child: ListTile(
-                        title: Text(L.of(context)!.settings_download_sd_card_label),
-                        trailing: Switch.adaptive(
-                          value: snapshot.data!.storeDownloadsSDCard,
-                          onChanged: (value) => sdcard
-                              ? setState(() {
-                                  if (value) {
-                                    _showStorageDialog(enableExternalStorage: true);
-                                  } else {
-                                    _showStorageDialog(enableExternalStorage: false);
-                                  }
-
-                                  settingsBloc.storeDownloadonSDCard(value);
-                                })
-                              : null,
-                        ),
-                      ),
-                    )
-                  : const SizedBox(
-                      height: 0,
-                      width: 0,
-                    ),
+              MergeSemantics(
+                child: ListTile(
+                  shape: const RoundedRectangleBorder(side: BorderSide.none),
+                  title: Text(L.of(context)!.settings_download_sd_card_label),
+                  // The switch is only enabled when a removable SD card is
+                  // present; otherwise downloads stay on internal storage.
+                  onTap: sdcard
+                      ? () {
+                          setState(() {
+                            final value = !snapshot.data!.storeDownloadsSDCard;
+                            if (value) {
+                              _showStorageDialog(enableExternalStorage: true);
+                            } else {
+                              _showStorageDialog(enableExternalStorage: false);
+                            }
+                            settingsBloc.storeDownloadonSDCard(value);
+                          });
+                        }
+                      : null,
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.storeDownloadsSDCard,
+                    onChanged: sdcard
+                        ? (value) {
+                            setState(() {
+                              if (value) {
+                                _showStorageDialog(enableExternalStorage: true);
+                              } else {
+                                _showStorageDialog(enableExternalStorage: false);
+                              }
+                              settingsBloc.storeDownloadonSDCard(value);
+                            });
+                          }
+                        : null,
+                  ),
+                ),
+              ),
               SettingsDividerLabel(label: L.of(context)!.settings_playback_divider_label),
               MergeSemantics(
                 child: ListTile(

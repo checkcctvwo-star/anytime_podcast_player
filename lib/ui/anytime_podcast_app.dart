@@ -165,7 +165,10 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
       case 'en':
         return const Locale('en');
       case 'zh':
-        return const Locale('zh_Hans');
+        // Use languageCode 'zh' (not 'zh_Hans') so Flutter's built-in material
+        // localizations recognise it. Using Locale('zh_Hans') makes
+        // GlobalMaterialLocalizations reject it and the UI renders blank.
+        return const Locale('zh', 'Hans');
       default:
         return null;
     }
@@ -252,7 +255,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
           Locale('ru', ''),
           Locale('tr', ''),
           Locale('vi', ''),
-          Locale('zh_Hans', ''),
+          Locale('zh', 'Hans'),
         ],
         theme: theme,
         // Uncomment builder below to enable accessibility checker tool.

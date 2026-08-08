@@ -11,7 +11,15 @@ class L {
   L(this.localeName, this.overrides);
 
   static Future<L> load(Locale locale, Map<String, Map<String, String>> overrides) {
-    final name = locale.countryCode?.isEmpty ?? true ? locale.languageCode : locale.toString();
+    var name = locale.countryCode?.isEmpty ?? true ? locale.languageCode : locale.toString();
+
+    // The app only ships Simplified Chinese messages under 'zh_Hans'. A Chinese
+    // locale arrives as languageCode 'zh' (e.g. Locale('zh', 'Hans')), so map it
+    // to 'zh_Hans' to load the correct messages.
+    if (locale.languageCode == 'zh') {
+      name = 'zh_Hans';
+    }
+
     final localeName = Intl.canonicalizedLocale(name);
 
     return initializeMessages(localeName).then((_) {
@@ -2446,7 +2454,7 @@ class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
   const AnytimeLocalisationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh_Hans'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh', 'zh_Hans'].contains(locale.languageCode);
 
   @override
   Future<L> load(Locale locale) => L.load(locale, const {});
@@ -2469,7 +2477,7 @@ class EmbeddedLocalisationsDelegate extends LocalizationsDelegate<L> {
   EmbeddedLocalisationsDelegate({@required this.messages = const {}});
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh_Hans'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh', 'zh_Hans'].contains(locale.languageCode);
 
   @override
   Future<L> load(Locale locale) => L.load(locale, messages);
