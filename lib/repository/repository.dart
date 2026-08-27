@@ -70,6 +70,8 @@ abstract class Repository {
 
   Future<List<Episode>> findEpisodesByDownloadState(DownloadState state);
 
+  Future<List<Episode>> findActiveDownloads();
+
   Future<Transcript?> findTranscriptById(int id);
 
   Future<Transcript> saveTranscript(Transcript transcript);

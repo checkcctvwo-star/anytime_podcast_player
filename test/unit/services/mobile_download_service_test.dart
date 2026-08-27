@@ -65,6 +65,18 @@ class _FakeDownloadManager implements DownloadManager {
   }
 
   @override
+  Future<void> pauseTask(String taskId) async {}
+
+  @override
+  Future<void> resumeTask(String taskId) async {}
+
+  @override
+  Future<void> cancelTask(String taskId) async {}
+
+  @override
+  Future<String?> retryTask(String taskId) async => 'task1';
+
+  @override
   void dispose() {}
 }
 
@@ -206,6 +218,76 @@ void main() {
         tempDir.deleteSync(recursive: true);
       }
     }
+  });
+
+  test('pause, resume, and cancel download state transitions', () async {
+    final episode = Episode(
+      guid: 'EP_control_test',
+      podcast: '测试播客',
+      title: '控制测试单集',
+      contentUrl: 'https://example.com/audio/control.mp3',
+      downloadTaskId: 'task_ctrl_1',
+      downloadState: DownloadState.downloading,
+      downloadPercentage: 45,
+    );
+
+    await repository.saveEpisode(episode);
+
+    // Test pause
+    await service.pauseDownload(episode);
+    var updated = await repository.findEpisodeByGuid('EP_control_test');
+    expect(updated?.downloadState, DownloadState.paused);
+
+    // Test resume
+    await service.resumeDownload(episode);
+    updated = await repository.findEpisodeByGuid('EP_control_test');
+    expect(updated?.downloadState, DownloadState.downloading);
+
+    // Test cancel
+    await service.cancelDownload(episode);
+    updated = await repository.findEpisodeByGuid('EP_control_test');
+    expect(updated?.downloadState, DownloadState.none);
+    expect(updated?.downloadPercentage, 0);
+  });
+
+  test('findActiveDownloads returns episodes in active download states', () async {
+    final ep1 = Episode(
+      guid: 'EP_active_1',
+      podcast: 'Active Podcast',
+      title: 'Active Episode 1',
+      downloadState: DownloadState.downloading,
+    );
+    final ep2 = Episode(
+      guid: 'EP_active_2',
+      podcast: 'Active Podcast',
+      title: 'Active Episode 2',
+      downloadState: DownloadState.converting,
+    );
+    final ep3 = Episode(
+      guid: 'EP_active_3',
+      podcast: 'Active Podcast',
+      title: 'Active Episode 3',
+      downloadState: DownloadState.paused,
+    );
+    final ep4 = Episode(
+      guid: 'EP_inactive_4',
+      podcast: 'Active Podcast',
+      title: 'Inactive Episode 4',
+      downloadState: DownloadState.none,
+    );
+
+    await repository.saveEpisode(ep1);
+    await repository.saveEpisode(ep2);
+    await repository.saveEpisode(ep3);
+    await repository.saveEpisode(ep4);
+
+    final activeList = await repository.findActiveDownloads();
+    final guids = activeList.map((e) => e.guid).toSet();
+
+    expect(guids.contains('EP_active_1'), isTrue);
+    expect(guids.contains('EP_active_2'), isTrue);
+    expect(guids.contains('EP_active_3'), isTrue);
+    expect(guids.contains('EP_inactive_4'), isFalse);
   });
 
   tearDownAll(() {

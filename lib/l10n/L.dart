@@ -2579,6 +2579,29 @@ class L {
           locale: localeName,
         );
   }
+
+  String get downloads_tab_downloaded => message('downloads_tab_downloaded') ?? 'Downloaded';
+  String get downloads_tab_active => message('downloads_tab_active') ?? 'Downloading';
+  String get active_downloads_empty_message => message('active_downloads_empty_message') ?? 'No active downloads or transcoding tasks';
+  String get batch_action_delete => message('batch_action_delete') ?? 'Delete';
+  String get batch_action_queue => message('batch_action_queue') ?? 'Add to Queue';
+  String get batch_action_mark_played => message('batch_action_mark_played') ?? 'Mark Played';
+  String get batch_action_mark_unplayed => message('batch_action_mark_unplayed') ?? 'Mark Unplayed';
+  String get batch_delete_dialog_title => message('batch_delete_dialog_title') ?? 'Delete Episodes';
+  String get batch_delete_dialog_message => message('batch_delete_dialog_message') ?? 'Are you sure you want to delete the selected downloaded episodes?';
+  String get batch_add_to_queue_success => message('batch_add_to_queue_success') ?? 'Added selected episodes to queue';
+  String get download_action_pause => message('download_action_pause') ?? 'Pause';
+  String get download_action_resume => message('download_action_resume') ?? 'Resume';
+  String get download_action_retry => message('download_action_retry') ?? 'Retry';
+  String get download_action_cancel => message('download_action_cancel') ?? 'Cancel';
+  String get download_status_queued => message('download_status_queued') ?? 'Queued';
+  String get download_status_downloading => message('download_status_downloading') ?? 'Downloading';
+  String get download_status_converting => message('download_status_converting') ?? 'Converting';
+  String get download_status_paused => message('download_status_paused') ?? 'Paused';
+  String get download_status_failed => message('download_status_failed') ?? 'Failed';
+  String get multi_select_select_all => message('multi_select_select_all') ?? 'Select All';
+  String get multi_select_deselect_all => message('multi_select_deselect_all') ?? 'Deselect All';
+  String get multi_select_exit => message('multi_select_exit') ?? 'Exit';
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

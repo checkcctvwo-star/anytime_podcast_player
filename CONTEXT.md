@@ -39,3 +39,19 @@ _Avoid_: Auto fetch, auto sync, auto pull
 **Audio Metadata Tags (ID3)**:
 Embedded title, artist, album, and date tags inside the Episode Audio File, ensuring external media players display the human-readable episode title and podcast name rather than raw CDN or hash filenames.
 _Avoid_: File info, mp3 properties, track info
+
+**Active Downloads Queue**:
+The live queue showing all currently active episode download and transcoding operations (`queued`, `downloading`, `converting`, `paused`, `failed`).
+_Avoid_: Download manager, tasks list, in-progress files
+
+**Downloaded Library**:
+The persistent collection of completely downloaded and ready-to-play episodes stored on the device.
+_Avoid_: Downloaded files, offline tracks, completed folder
+
+**Download Task Controls**:
+Interactive actions on individual downloading or converting items, specifically Pause, Resume, Retry, and Cancel.
+_Avoid_: Task buttons, download commands, operation toggles
+
+**Multi-Select Batch Mode**:
+A temporary selection state entered via long-press in the Downloaded Library, allowing users to select multiple episodes for batch deletion, batch queueing, or batch played status toggling.
+_Avoid_: Mass edit, multi edit, bulk manager

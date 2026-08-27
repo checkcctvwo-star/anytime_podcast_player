@@ -178,6 +178,85 @@ class MobileDownloadService extends DownloadService {
     return repository.findEpisodeByTaskId(taskId);
   }
 
+  @override
+  Future<void> pauseDownload(Episode episode) async {
+    if (episode.downloadTaskId != null && episode.downloadTaskId!.isNotEmpty) {
+      await downloadManager.pauseTask(episode.downloadTaskId!);
+    }
+    episode.downloadState = DownloadState.paused;
+    await repository.saveEpisode(episode);
+  }
+
+  @override
+  Future<void> resumeDownload(Episode episode) async {
+    if (episode.downloadTaskId != null && episode.downloadTaskId!.isNotEmpty) {
+      await downloadManager.resumeTask(episode.downloadTaskId!);
+      episode.downloadState = DownloadState.downloading;
+      await repository.saveEpisode(episode);
+    } else {
+      await downloadEpisode(episode);
+    }
+  }
+
+  @override
+  Future<void> retryDownload(Episode episode) async {
+    try {
+      final filename = await resolvePath(episode);
+      final file = File(filename);
+      if (await file.exists() && (episode.downloadState == DownloadState.converting || episode.downloadPercentage == 100)) {
+        episode.downloadState = DownloadState.converting;
+        episode.downloadPercentage = 0;
+        await repository.saveEpisode(episode);
+
+        final newFilename = await audioConverter.ensureMp3(
+          filename,
+          title: episode.title,
+          artist: episode.podcast,
+          album: episode.podcast,
+          year: episode.publicationDate?.year.toString(),
+          onProgress: (percent) {
+            if (episode.downloadPercentage != percent) {
+              episode.downloadPercentage = percent;
+              repository.saveEpisode(episode);
+            }
+          },
+        );
+
+        final newBase = newFilename.split(Platform.isWindows ? '\\' : '/').last;
+        episode.filename = newBase;
+        episode.downloadPercentage = 100;
+        episode.downloadState = DownloadState.downloaded;
+        await repository.saveEpisode(episode);
+        return;
+      }
+    } catch (_) {}
+
+    await downloadEpisode(episode);
+  }
+
+  @override
+  Future<void> cancelDownload(Episode episode) async {
+    if (episode.downloadTaskId != null && episode.downloadTaskId!.isNotEmpty) {
+      try {
+        await downloadManager.cancelTask(episode.downloadTaskId!);
+      } catch (_) {}
+    }
+
+    try {
+      final filename = await resolvePath(episode);
+      final file = File(filename);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (_) {}
+
+    episode.downloadTaskId = null;
+    episode.downloadPercentage = 0;
+    episode.downloadState = DownloadState.none;
+    episode.filename = null;
+    await repository.saveEpisode(episode);
+  }
+
   Future<void> _updateDownloadProgress(DownloadProgress progress) async {
     var episode = await repository.findEpisodeByTaskId(progress.id);
 

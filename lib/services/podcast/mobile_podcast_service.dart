@@ -610,6 +610,11 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
+  Future<List<Episode>> loadActiveDownloads() async {
+    return repository.findActiveDownloads();
+  }
+
+  @override
   Future<List<Episode>> loadEpisodes() async {
     return repository.findAllEpisodes();
   }
