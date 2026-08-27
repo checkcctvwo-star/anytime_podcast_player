@@ -156,6 +156,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "converting_episode_button_label": "Converting audio format",
+  "@converting_episode_button_label": {
+    "description": "Semantic label when episode audio is being converted to MP3",
+    "type": "text",
+    "placeholders": {}
+  },
   "download_episode_button_label": "Download episode",
   "@download_episode_button_label": {
     "description": "Semantic label for the download episode button",

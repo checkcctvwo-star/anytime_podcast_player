@@ -28,19 +28,48 @@ String mp3TargetPath(String sourcePath) {
 /// [target]. Uses the LAME encoder at a fixed 192kbps, keeps audio only and
 /// overwrites any existing output. Keeping this as a pure function makes it
 /// straightforward to unit test without a real ffmpeg binary.
-List<String> buildMp3ConversionArgs(String source, String target) {
-  return [
+List<String> buildMp3ConversionArgs(
+  String source,
+  String target, {
+  String? title,
+  String? artist,
+  String? album,
+  String? year,
+}) {
+  final args = [
     '-i', source,
-    '-vn', '-acodec', 'libmp3lame', '-b:a', '192k',
-    '-y', target,
+    '-vn',
+    '-acodec', 'libmp3lame',
+    '-b:a', '192k',
   ];
+
+  if (title != null && title.trim().isNotEmpty) {
+    args.addAll(['-metadata', 'title=${title.trim()}']);
+  }
+  if (artist != null && artist.trim().isNotEmpty) {
+    args.addAll(['-metadata', 'artist=${artist.trim()}']);
+  }
+  if (album != null && album.trim().isNotEmpty) {
+    args.addAll(['-metadata', 'album=${album.trim()}']);
+  }
+  if (year != null && year.trim().isNotEmpty) {
+    args.addAll(['-metadata', 'date=${year.trim()}']);
+  }
+
+  args.addAll([
+    '-id3v2_version', '3',
+    '-write_id3v1', '1',
+    '-y', target,
+  ]);
+
+  return args;
 }
 
 /// Executes an ffmpeg conversion. Abstracted behind an interface so the rest of
 /// the code (and the tests) never need to touch the native ffmpeg plugin.
 abstract class AudioConverterRunner {
   /// Runs ffmpeg with [args] and returns true on success.
-  Future<bool> run(List<String> args);
+  Future<bool> run(List<String> args, {void Function(int percentage)? onProgress});
 }
 
 /// Ensures a downloaded audio file is an MP3, converting it when necessary.
@@ -58,16 +87,31 @@ class Mp3ConverterService {
   /// If [sourcePath] is not already an MP3, transcodes it to MP3 and removes
   /// the original file. Returns the path of an MP3 file: the converted one on
   /// success, otherwise the original (unchanged) path.
-  Future<String> ensureMp3(String sourcePath) async {
+  Future<String> ensureMp3(
+    String sourcePath, {
+    String? title,
+    String? artist,
+    String? album,
+    String? year,
+    void Function(int percentage)? onProgress,
+  }) async {
     if (isMp3Extension(sourcePath)) {
       return sourcePath;
     }
 
     final targetPath = mp3TargetPath(sourcePath);
-    _log.fine('Converting non-MP3 file $sourcePath -> $targetPath');
+    _log.fine('Converting non-MP3 file $sourcePath -> $targetPath (title: $title, artist: $artist)');
 
     try {
-      final ok = await _runner.run(buildMp3ConversionArgs(sourcePath, targetPath));
+      final args = buildMp3ConversionArgs(
+        sourcePath,
+        targetPath,
+        title: title,
+        artist: artist,
+        album: album,
+        year: year,
+      );
+      final ok = await _runner.run(args, onProgress: onProgress);
       if (ok && File(targetPath).existsSync()) {
         // The MP3 is complete, so the original is no longer needed. Removing it
         // is best-effort; a failure here should not fail the download.

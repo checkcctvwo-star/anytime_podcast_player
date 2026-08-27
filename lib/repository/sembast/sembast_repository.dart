@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/queue.dart';
@@ -326,6 +327,22 @@ class SembastRepository extends Repository {
   Future<List<Episode>> findDownloads() async {
     final finder =
         Finder(filter: Filter.equals('downloadPercentage', '100'), sortOrders: [SortOrder('publicationDate', false)]);
+
+    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+        await _episodeStore.find(await _db, finder: finder);
+
+    final results = recordSnapshots.map((snapshot) {
+      final episode = Episode.fromMap(snapshot.key, snapshot.value);
+
+      return episode;
+    }).toList();
+
+    return results;
+  }
+
+  @override
+  Future<List<Episode>> findEpisodesByDownloadState(DownloadState state) async {
+    final finder = Finder(filter: Filter.equals('downloadState', state.index));
 
     final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
         await _episodeStore.find(await _db, finder: finder);

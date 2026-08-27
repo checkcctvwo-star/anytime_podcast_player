@@ -23,7 +23,7 @@ import '../mocks/mock_settings_service.dart';
 
 class _NoOpRunner implements AudioConverterRunner {
   @override
-  Future<bool> run(List<String> args) async => true;
+  Future<bool> run(List<String> args, {void Function(int percentage)? onProgress}) async => true;
 }
 
 /// Records calls to ensureMp3 so a test can assert whether conversion ran.
@@ -33,7 +33,14 @@ class _RecordingConverter extends Mp3ConverterService {
   _RecordingConverter() : super(_NoOpRunner());
 
   @override
-  Future<String> ensureMp3(String sourcePath) async {
+  Future<String> ensureMp3(
+    String sourcePath, {
+    String? title,
+    String? artist,
+    String? album,
+    String? year,
+    void Function(int percentage)? onProgress,
+  }) async {
     calls.add(sourcePath);
     return sourcePath;
   }
@@ -164,6 +171,40 @@ void main() {
         tempDir.deleteSync(recursive: true);
       }
       settings.customDownloadPath = '';
+    }
+  });
+
+  test('recoverUnfinishedTranscodes finishes converting episodes left in converting state', () async {
+    settings.convertToMp3 = true;
+    final tempDir = Directory.systemTemp.createTempSync('test_recover');
+    final filename = '2026-08-16_第106期 具身智能续篇.m4a';
+    final targetFile = File('${tempDir.path}/$filename');
+    targetFile.createSync();
+
+    final episode = Episode(
+      guid: 'EP_recovering_test',
+      podcast: '硅谷101',
+      title: '第106期 具身智能续篇',
+      contentUrl: 'https://example.com/audio/ep106.m4a',
+      filename: filename,
+      filepath: tempDir.path,
+      downloadTaskId: 'task_recover_1',
+      downloadState: DownloadState.converting,
+    );
+
+    try {
+      await repository.saveEpisode(episode);
+      converter.calls.clear();
+
+      await service.recoverUnfinishedTranscodes();
+
+      expect(converter.calls, isNotEmpty);
+      final updated = await repository.findEpisodeByGuid('EP_recovering_test');
+      expect(updated?.downloadState, DownloadState.downloaded);
+    } finally {
+      if (tempDir.existsSync()) {
+        tempDir.deleteSync(recursive: true);
+      }
     }
   });
 

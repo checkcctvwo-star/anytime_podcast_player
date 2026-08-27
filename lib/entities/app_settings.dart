@@ -77,6 +77,12 @@ class AppSettings {
   /// True if showing a status icon in the notification bar during fetch is enabled
   final bool updatesNotification;
 
+  /// True if newly detected episodes should be automatically downloaded.
+  final bool autoDownloadEpisodes;
+
+  /// List of podcast GUIDs selected for auto-downloading. Empty means all subscribed.
+  final List<String> autoDownloadPodcastGuids;
+
   AppSettings({
     required this.theme,
     required this.language,
@@ -102,6 +108,8 @@ class AppSettings {
     required this.backgroundUpdate,
     required this.backgroundUpdateMobileData,
     required this.updatesNotification,
+    this.autoDownloadEpisodes = false,
+    this.autoDownloadPodcastGuids = const <String>[],
   });
 
   AppSettings.sensibleDefaults()
@@ -128,7 +136,9 @@ class AppSettings {
         autoPlay = false,
         backgroundUpdate = false,
         backgroundUpdateMobileData = false,
-        updatesNotification = false;
+        updatesNotification = false,
+        autoDownloadEpisodes = false,
+        autoDownloadPodcastGuids = const <String>[];
 
   AppSettings copyWith({
     String? theme,
@@ -156,6 +166,8 @@ class AppSettings {
     bool? backgroundUpdate,
     bool? backgroundUpdateMobileData,
     bool? updatesNotification,
+    bool? autoDownloadEpisodes,
+    List<String>? autoDownloadPodcastGuids,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
@@ -182,5 +194,7 @@ class AppSettings {
         backgroundUpdate: backgroundUpdate ?? this.backgroundUpdate,
         backgroundUpdateMobileData: backgroundUpdateMobileData ?? this.backgroundUpdateMobileData,
         updatesNotification: updatesNotification ?? this.updatesNotification,
+        autoDownloadEpisodes: autoDownloadEpisodes ?? this.autoDownloadEpisodes,
+        autoDownloadPodcastGuids: autoDownloadPodcastGuids ?? this.autoDownloadPodcastGuids,
       );
 }

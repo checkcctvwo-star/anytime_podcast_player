@@ -39,6 +39,8 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<String> _language = BehaviorSubject<String>();
   final BehaviorSubject<bool> _convertToMp3 = BehaviorSubject<bool>();
   final BehaviorSubject<String> _customDownloadPath = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _autoDownloadEpisodes = BehaviorSubject<bool>();
+  final BehaviorSubject<List<String>> _autoDownloadPodcastGuids = BehaviorSubject<List<String>>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -83,6 +85,8 @@ class SettingsBloc extends Bloc {
       backgroundUpdate: settingsService.backgroundUpdate,
       backgroundUpdateMobileData: settingsService.backgroundUpdateMobileData,
       updatesNotification: settingsService.updateNotification,
+      autoDownloadEpisodes: settingsService.autoDownloadEpisodes,
+      autoDownloadPodcastGuids: settingsService.autoDownloadPodcastGuids,
     );
 
     _settings.add(_currentSettings);
@@ -127,6 +131,18 @@ class SettingsBloc extends Bloc {
       _currentSettings = _currentSettings.copyWith(customDownloadPath: path);
       _settings.add(_currentSettings);
       settingsService.customDownloadPath = path;
+    });
+
+    _autoDownloadEpisodes.listen((bool autoDownload) {
+      _currentSettings = _currentSettings.copyWith(autoDownloadEpisodes: autoDownload);
+      _settings.add(_currentSettings);
+      settingsService.autoDownloadEpisodes = autoDownload;
+    });
+
+    _autoDownloadPodcastGuids.listen((List<String> guids) {
+      _currentSettings = _currentSettings.copyWith(autoDownloadPodcastGuids: guids);
+      _settings.add(_currentSettings);
+      settingsService.autoDownloadPodcastGuids = guids;
     });
 
     _playbackSpeed.listen((double speed) {
@@ -296,6 +312,10 @@ class SettingsBloc extends Bloc {
 
   void Function(String) get setCustomDownloadPath => _customDownloadPath.add;
 
+  void Function(bool) get setAutoDownloadEpisodes => _autoDownloadEpisodes.add;
+
+  void Function(List<String>) get setAutoDownloadPodcastGuids => _autoDownloadPodcastGuids.add;
+
   AppSettings get currentSettings => _settings.value;
 
   @override
@@ -305,6 +325,8 @@ class SettingsBloc extends Bloc {
     _deleteDownloadedPlayedEpisodes.close();
     _storeDownloadOnSDCard.close();
     _customDownloadPath.close();
+    _autoDownloadEpisodes.close();
+    _autoDownloadPodcastGuids.close();
     _playbackSpeed.close();
     _searchProvider.close();
     _externalLinkConsent.close();

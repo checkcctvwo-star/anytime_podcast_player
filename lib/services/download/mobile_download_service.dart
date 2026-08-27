@@ -52,6 +52,7 @@ class MobileDownloadService extends DownloadService {
     downloadProgress.listen((progress) {
       _updateDownloadProgress(progress);
     });
+    recoverUnfinishedTranscodes();
   }
 
   @override
@@ -196,14 +197,33 @@ class MobileDownloadService extends DownloadService {
           // file is an MP3. Otherwise (m4a/aac) it is transcoded and the
           // original removed, so `filename` now points at the MP3. When the
           // setting is off we keep the file exactly as downloaded.
-          if (settings?.convertToMp3 ?? true) {
-            filename = await audioConverter.ensureMp3(filename);
+          if ((settings?.convertToMp3 ?? true) && !isMp3Extension(filename)) {
+            episode.downloadState = DownloadState.converting;
+            episode.downloadPercentage = 0;
+            await repository.saveEpisode(episode);
+
+            filename = await audioConverter.ensureMp3(
+              filename,
+              title: episode.title,
+              artist: episode.podcast,
+              album: episode.podcast,
+              year: episode.publicationDate?.year.toString(),
+              onProgress: (percent) {
+                if (episode.downloadPercentage != percent) {
+                  episode.downloadPercentage = percent;
+                  repository.saveEpisode(episode);
+                }
+              },
+            );
 
             // Keep the stored episode filename in sync if conversion changed it.
             final newBase = filename.split(Platform.isWindows ? '\\' : '/').last;
             if (episode.filename != newBase) {
               episode.filename = newBase;
             }
+
+            episode.downloadState = DownloadState.downloaded;
+            episode.downloadPercentage = 100;
           }
 
           try {
@@ -239,6 +259,43 @@ class MobileDownloadService extends DownloadService {
 
         await repository.saveEpisode(episode);
       }
+    }
+  }
+
+  Future<void> recoverUnfinishedTranscodes() async {
+    try {
+      final settings = settingsService ?? await MobileSettingsService.instance();
+      if (!(settings?.convertToMp3 ?? true)) return;
+
+      final episodes = await repository.findEpisodesByDownloadState(DownloadState.converting);
+      for (var episode in episodes) {
+        var filename = await resolvePath(episode);
+        if (File(filename).existsSync() && !isMp3Extension(filename)) {
+          filename = await audioConverter.ensureMp3(
+            filename,
+            title: episode.title,
+            artist: episode.podcast,
+            album: episode.podcast,
+            year: episode.publicationDate?.year.toString(),
+            onProgress: (percent) {
+              if (episode.downloadPercentage != percent) {
+                episode.downloadPercentage = percent;
+                repository.saveEpisode(episode);
+              }
+            },
+          );
+
+          final newBase = filename.split(Platform.isWindows ? '\\' : '/').last;
+          if (episode.filename != newBase) {
+            episode.filename = newBase;
+          }
+          episode.downloadState = DownloadState.downloaded;
+          episode.downloadPercentage = 100;
+          await repository.saveEpisode(episode);
+        }
+      }
+    } catch (e, s) {
+      log.warning('Error recovering unfinished transcodes', e, s);
     }
   }
 }

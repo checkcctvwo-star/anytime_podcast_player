@@ -101,6 +101,8 @@ class AnytimePodcastApp extends StatefulWidget {
       podcastService: podcastService!,
     );
 
+    podcastService!.downloadService = downloadService;
+
     audioPlayerService = DefaultAudioPlayerService(
       repository: repository,
       settingsService: mobileSettingsService,
@@ -156,6 +158,10 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         }
       });
     });
+
+    if (widget.mobileSettingsService.autoDownloadEpisodes) {
+      widget.podcastService?.refreshFeeds(manual: true);
+    }
   }
 
   /// Maps the stored language setting to a Flutter [Locale]. Returns null to

@@ -196,4 +196,16 @@ void main() {
     mobileSettingsService?.customDownloadPath = '/custom/podcasts';
     expect(mobileSettingsService?.customDownloadPath, '/custom/podcasts');
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test auto download episodes and podcast guids', () async {
+    expect(mobileSettingsService?.autoDownloadEpisodes, false);
+    expectLater(settingsListener, emits('auto_download_episodes'));
+    mobileSettingsService?.autoDownloadEpisodes = true;
+    expect(mobileSettingsService?.autoDownloadEpisodes, true);
+
+    expect(mobileSettingsService?.autoDownloadPodcastGuids, isEmpty);
+    expectLater(settingsListener, emits('auto_download_podcast_guids'));
+    mobileSettingsService?.autoDownloadPodcastGuids = ['guid-1', 'guid-2'];
+    expect(mobileSettingsService?.autoDownloadPodcastGuids, ['guid-1', 'guid-2']);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }

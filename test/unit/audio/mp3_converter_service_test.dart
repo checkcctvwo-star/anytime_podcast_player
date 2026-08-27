@@ -12,12 +12,16 @@ import 'package:flutter_test/flutter_test.dart';
 class _FakeRunner implements AudioConverterRunner {
   final bool succeed;
   final List<List<String>> calls = [];
+  final int progressToReport;
 
-  _FakeRunner({this.succeed = true});
+  _FakeRunner({this.succeed = true, this.progressToReport = -1});
 
   @override
-  Future<bool> run(List<String> args) async {
+  Future<bool> run(List<String> args, {void Function(int percentage)? onProgress}) async {
     calls.add(args);
+    if (progressToReport >= 0 && onProgress != null) {
+      onProgress(progressToReport);
+    }
     if (succeed) {
       // The target path is the last argument; create it to simulate output.
       File(args.last).createSync(recursive: true);
@@ -29,7 +33,8 @@ class _FakeRunner implements AudioConverterRunner {
 
 class _ThrowingRunner implements AudioConverterRunner {
   @override
-  Future<bool> run(List<String> args) async => throw Exception('ffmpeg boom');
+  Future<bool> run(List<String> args, {void Function(int percentage)? onProgress}) async =>
+      throw Exception('ffmpeg boom');
 }
 
 void main() {
@@ -55,13 +60,35 @@ void main() {
   });
 
   group('buildMp3ConversionArgs', () {
-    test('builds ffmpeg args transcoding to mp3 at 192k', () {
+    test('builds ffmpeg args transcoding to mp3 with id3 defaults', () {
       final args = buildMp3ConversionArgs('/in.m4a', '/out.mp3');
       expect(args, [
         '-i', '/in.m4a',
-        '-vn', '-acodec', 'libmp3lame', '-b:a', '192k',
+        '-vn',
+        '-acodec', 'libmp3lame',
+        '-b:a', '192k',
+        '-id3v2_version', '3',
+        '-write_id3v1', '1',
         '-y', '/out.mp3',
       ]);
+    });
+
+    test('embeds title, artist, album, date metadata into ffmpeg arguments', () {
+      final args = buildMp3ConversionArgs(
+        '/in.m4a',
+        '/out.mp3',
+        title: '第105期 具身智能',
+        artist: '硅谷101',
+        album: '硅谷101',
+        year: '2026',
+      );
+      expect(args, contains('-metadata'));
+      expect(args, contains('title=第105期 具身智能'));
+      expect(args, contains('artist=硅谷101'));
+      expect(args, contains('album=硅谷101'));
+      expect(args, contains('date=2026'));
+      expect(args, contains('-id3v2_version'));
+      expect(args, contains('3'));
     });
   });
 
@@ -114,6 +141,28 @@ void main() {
 
       expect(await svc.ensureMp3(src), src);
       expect(File(src).existsSync(), isTrue);
+    });
+
+    test('ensureMp3 passes metadata and triggers onProgress callback', () async {
+      final runner = _FakeRunner(succeed: true, progressToReport: 45);
+      final svc = Mp3ConverterService(runner);
+      final src = '${tmp.path}/episode.m4a';
+      File(src).createSync();
+
+      int reportedProgress = 0;
+      final result = await svc.ensureMp3(
+        src,
+        title: '硅谷101专访',
+        artist: '硅谷101',
+        album: '硅谷101',
+        year: '2026',
+        onProgress: (p) => reportedProgress = p,
+      );
+
+      expect(result, '${tmp.path}/episode.mp3');
+      expect(reportedProgress, 45);
+      expect(runner.calls.first, contains('title=硅谷101专访'));
+      expect(runner.calls.first, contains('artist=硅谷101'));
     });
   });
 }

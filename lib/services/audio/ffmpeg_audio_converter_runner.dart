@@ -13,7 +13,7 @@ import 'mp3_converter_service.dart';
 /// so everything else stays unit-testable without ffmpeg.
 class FFmpegAudioConverterRunner implements AudioConverterRunner {
   @override
-  Future<bool> run(List<String> args) async {
+  Future<bool> run(List<String> args, {void Function(int percentage)? onProgress}) async {
     final session = await FFmpegKit.executeWithArguments(args);
     final returnCode = await session.getReturnCode();
     return ReturnCode.isSuccess(returnCode);

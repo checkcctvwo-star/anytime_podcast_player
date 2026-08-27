@@ -298,6 +298,28 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set autoDownloadEpisodes(bool value) {
+    _sharedPreferences.setBool('auto_download_episodes', value);
+    settingsNotifier.sink.add('auto_download_episodes');
+  }
+
+  @override
+  bool get autoDownloadEpisodes {
+    return _sharedPreferences.getBool('auto_download_episodes') ?? false;
+  }
+
+  @override
+  set autoDownloadPodcastGuids(List<String> guids) {
+    _sharedPreferences.setStringList('auto_download_podcast_guids', guids);
+    settingsNotifier.sink.add('auto_download_podcast_guids');
+  }
+
+  @override
+  List<String> get autoDownloadPodcastGuids {
+    return _sharedPreferences.getStringList('auto_download_podcast_guids') ?? <String>[];
+  }
+
+  @override
   AppSettings? settings;
 
   @override

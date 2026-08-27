@@ -46,6 +46,7 @@ class MobilePodcastService extends PodcastService {
     required super.repository,
     required super.notificationService,
     required super.settingsService,
+    super.downloadService,
   }) {
     _init();
   }
@@ -815,6 +816,20 @@ class MobilePodcastService extends PodcastService {
               if (p != null) {
                 if (p.newEpisodes > 0 || p.updatedEpisodes) {
                   newOrUpdatedEpisodes = true;
+
+                  if (settingsService.autoDownloadEpisodes && downloadService != null) {
+                    final selectedGuids = settingsService.autoDownloadPodcastGuids;
+                    final isEligible = selectedGuids.isEmpty || selectedGuids.contains(p.guid);
+                    if (isEligible) {
+                      final newEps = p.episodes.where((e) => e.highlight && !e.downloaded).toList();
+                      newEps.sort((a, b) =>
+                          (b.publicationDate ?? DateTime(1970)).compareTo(a.publicationDate ?? DateTime(1970)));
+                      for (var ep in newEps.take(2)) {
+                        _log.fine('Auto-downloading new episode: ${ep.title} (${p.title})');
+                        downloadService!.downloadEpisode(ep);
+                      }
+                    }
+                  }
                 }
               }
             } catch (e) {

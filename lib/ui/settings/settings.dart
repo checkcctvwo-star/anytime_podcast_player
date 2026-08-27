@@ -196,6 +196,31 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_auto_download_episodes_label),
+                  subtitle: Text(L.of(context)!.settings_auto_download_episodes_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.autoDownloadEpisodes,
+                    onChanged: (value) => setState(() => settingsBloc.setAutoDownloadEpisodes(value)),
+                  ),
+                ),
+              ),
+              if (snapshot.data!.autoDownloadEpisodes)
+                MergeSemantics(
+                  child: ListTile(
+                    title: Text(L.of(context)!.settings_auto_download_podcasts_label),
+                    subtitle: Text(
+                      snapshot.data!.autoDownloadPodcastGuids.isEmpty
+                          ? L.of(context)!.settings_auto_download_all_podcasts
+                          : L.of(context)!.settings_auto_download_selected_podcasts(
+                              snapshot.data!.autoDownloadPodcastGuids.length,
+                            ),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _showPodcastSelectionDialog(context, settingsBloc, snapshot.data!),
+                  ),
+                ),
               SettingsDividerLabel(label: L.of(context)!.settings_notification_divider_label),
               MergeSemantics(
                 child: ListTile(
@@ -367,6 +392,104 @@ class _SettingsState extends State<Settings> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showPodcastSelectionDialog(
+    BuildContext context,
+    SettingsBloc settingsBloc,
+    AppSettings settings,
+  ) async {
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final subscriptions = await podcastBloc.podcastService.subscriptions();
+
+    if (!context.mounted) return;
+
+    if (subscriptions.isEmpty) {
+      await showPlatformDialog<void>(
+        context: context,
+        useRootNavigator: false,
+        builder: (_) => BasicDialogAlert(
+          title: Text(L.of(context)!.settings_auto_download_podcasts_label),
+          content: Text(L.of(context)!.settings_auto_download_no_subscriptions),
+          actions: <Widget>[
+            BasicDialogAction(
+              title: Text(L.of(context)!.ok_button_label),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final currentGuids = Set<String>.from(settings.autoDownloadPodcastGuids);
+    final selectedGuids = currentGuids.isEmpty
+        ? subscriptions.map((p) => p.guid).toSet()
+        : Set<String>.from(currentGuids);
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(L.of(context)!.settings_auto_download_podcasts_label),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: subscriptions.length,
+                  itemBuilder: (context, index) {
+                    final podcast = subscriptions[index];
+                    final isChecked = selectedGuids.contains(podcast.guid);
+                    return CheckboxListTile(
+                      title: Text(
+                        podcast.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      value: isChecked,
+                      onChanged: (bool? val) {
+                        setDialogState(() {
+                          if (val == true) {
+                            selectedGuids.add(podcast.guid);
+                          } else {
+                            selectedGuids.remove(podcast.guid);
+                          }
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text(L.of(context)!.settings_auto_download_select_all),
+                  onPressed: () {
+                    setDialogState(() {
+                      selectedGuids.addAll(subscriptions.map((p) => p.guid));
+                    });
+                  },
+                ),
+                TextButton(
+                  child: Text(L.of(context)!.cancel_button_label),
+                  onPressed: () => Navigator.pop(dialogContext),
+                ),
+                TextButton(
+                  child: Text(L.of(context)!.ok_button_label),
+                  onPressed: () {
+                    setState(() {
+                      settingsBloc.setAutoDownloadPodcastGuids(selectedGuids.toList());
+                    });
+                    Navigator.pop(dialogContext);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

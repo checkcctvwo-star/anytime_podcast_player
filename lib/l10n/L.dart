@@ -315,6 +315,16 @@ class L {
         );
   }
 
+  String get converting_episode_button_label {
+    return message('converting_episode_button_label') ??
+        Intl.message(
+          'Converting audio format',
+          name: 'converting_episode_button_label',
+          desc: 'Semantic label when episode audio is being converted to MP3',
+          locale: localeName,
+        );
+  }
+
   String get delete_episode_button_label {
     return message('delete_episode_button_label') ??
         Intl.message(
@@ -2495,6 +2505,77 @@ class L {
           'Allow the library to be refreshed when on mobile data',
           name: 'settings_background_refresh_mobile_data_option_subtitle',
           desc: 'Background episode update toggle when on mobile switch subtitle',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_download_episodes_label {
+    return message('settings_auto_download_episodes_label') ??
+        Intl.message(
+          'Auto-download new episodes',
+          name: 'settings_auto_download_episodes_label',
+          desc: 'Label for auto-download episodes setting',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_download_episodes_subtitle {
+    return message('settings_auto_download_episodes_subtitle') ??
+        Intl.message(
+          'Automatically download latest episodes when detected',
+          name: 'settings_auto_download_episodes_subtitle',
+          desc: 'Subtitle for auto-download episodes setting',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_download_podcasts_label {
+    return message('settings_auto_download_podcasts_label') ??
+        Intl.message(
+          'Choose podcasts to auto-download',
+          name: 'settings_auto_download_podcasts_label',
+          desc: 'Label for selecting podcasts for auto-download',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_download_all_podcasts {
+    return message('settings_auto_download_all_podcasts') ??
+        Intl.message(
+          'All subscribed podcasts',
+          name: 'settings_auto_download_all_podcasts',
+          desc: 'Label indicating all podcasts are selected for auto-download',
+          locale: localeName,
+        );
+  }
+
+  String settings_auto_download_selected_podcasts(int count) {
+    return message('settings_auto_download_selected_podcasts') ??
+        Intl.message(
+          '$count podcasts selected',
+          name: 'settings_auto_download_selected_podcasts',
+          args: [count],
+          desc: 'Label showing count of selected podcasts for auto-download',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_download_no_subscriptions {
+    return message('settings_auto_download_no_subscriptions') ??
+        Intl.message(
+          'No subscribed podcasts found. Please subscribe to podcasts first.',
+          name: 'settings_auto_download_no_subscriptions',
+          desc: 'Alert message when user has no subscriptions',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_download_select_all {
+    return message('settings_auto_download_select_all') ??
+        Intl.message(
+          'Select All',
+          name: 'settings_auto_download_select_all',
+          desc: 'Button to select all podcasts',
           locale: localeName,
         );
   }

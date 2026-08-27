@@ -106,4 +106,12 @@ abstract class SettingsService {
   set lastFeedRefresh(DateTime lastFeedRefresh);
 
   DateTime get lastFeedRefresh;
+
+  set autoDownloadEpisodes(bool value);
+
+  bool get autoDownloadEpisodes;
+
+  set autoDownloadPodcastGuids(List<String> guids);
+
+  List<String> get autoDownloadPodcastGuids;
 }

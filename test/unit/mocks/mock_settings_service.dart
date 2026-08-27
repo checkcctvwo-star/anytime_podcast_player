@@ -53,6 +53,12 @@ class MockSettingsService extends SettingsService {
   String customDownloadPath = '';
 
   @override
+  bool autoDownloadEpisodes = false;
+
+  @override
+  List<String> autoDownloadPodcastGuids = <String>[];
+
+  @override
   String theme = ThemeMode.dark.name;
 
   @override

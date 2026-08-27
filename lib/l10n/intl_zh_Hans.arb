@@ -155,6 +155,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "converting_episode_button_label": "正在转换格式",
+  "@converting_episode_button_label": {
+    "description": "Semantic label when episode audio is being converted to MP3",
+    "type": "text",
+    "placeholders": {}
+  },
   "download_episode_button_label": "下载单集",
   "@download_episode_button_label": {
     "description": "Semantic label for the download episode button",

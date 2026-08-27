@@ -59,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m18(seconds) => "${seconds}秒";
 
+  static m19(count) => "已选择 ${count} 个节目";
+
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
 
@@ -90,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'discover': MessageLookupByLibrary.simpleMessage('发现'),
     'discovery_categories_itunes': MessageLookupByLibrary.simpleMessage('全部,艺术,商业,喜剧,教育,小说,政府,健康与健身,历史,儿童与家庭,休闲,音乐,新闻,宗教与信仰,科学,社会与文化,体育,电视与电影,科技,真实犯罪'),
     'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('全部,幕后花絮,另类,动物,动画,艺术,天文学,汽车,航空,棒球,篮球,美容,书籍,佛教,商业,职业,化学,基督教,气候,喜剧,评论,课程,手工艺,板球,加密货币,文化,每日,设计,纪录片,戏剧,地球,教育,娱乐,创业,家庭,奇幻,时尚,小说,电影,健身,食品,足球,游戏,园艺,高尔夫,政府,健康,印度教,历史,爱好,冰球,家居,教程,即兴,访谈,投资,伊斯兰教,日志,犹太教,儿童,语言,学习,休闲,生活,管理,漫画,营销,数学,医学,心理健康,音乐,自然,自然,新闻,非营利,营养,育儿,表演,个人,宠物,哲学,物理学,地方,政治,关系,宗教,评论,角色扮演,橄榄球,跑步,科学,自我提升,性,足球,社会,社会,心灵,体育,单口相声,故事,游泳,电视,桌面游戏,科技,网球,旅行,真实犯罪,视频游戏,视觉,排球,天气,荒野,摔跤'),
+    'converting_episode_button_label': MessageLookupByLibrary.simpleMessage('正在转换格式'),
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('下载单集'),
     'downloads': MessageLookupByLibrary.simpleMessage('下载'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('您的播放队列为空'),
@@ -243,6 +246,13 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('总是'),
     'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('刷新播客'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('从不'),
+    'settings_auto_download_episodes_label': MessageLookupByLibrary.simpleMessage('自动下载新单集'),
+    'settings_auto_download_episodes_subtitle': MessageLookupByLibrary.simpleMessage('检测到新更新时自动下载最新单集'),
+    'settings_auto_download_podcasts_label': MessageLookupByLibrary.simpleMessage('选择自动下载节目'),
+    'settings_auto_download_all_podcasts': MessageLookupByLibrary.simpleMessage('全部订阅节目'),
+    'settings_auto_download_selected_podcasts': m19,
+    'settings_auto_download_no_subscriptions': MessageLookupByLibrary.simpleMessage('暂无订阅节目，请先订阅节目。'),
+    'settings_auto_download_select_all': MessageLookupByLibrary.simpleMessage('全选'),
     'settings_background_refresh_mobile_data_option': MessageLookupByLibrary.simpleMessage('使用移动数据时刷新'),
     'settings_background_refresh_mobile_data_option_subtitle': MessageLookupByLibrary.simpleMessage('允许在使用移动数据时刷新播客库'),
     'settings_background_refresh_option': MessageLookupByLibrary.simpleMessage('后台刷新'),

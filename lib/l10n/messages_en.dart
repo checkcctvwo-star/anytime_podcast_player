@@ -59,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m18(seconds) => "${seconds} seconds";
 
+  static m19(count) => "${count} podcasts selected";
+
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
 
@@ -90,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'discover': MessageLookupByLibrary.simpleMessage('Discover'),
     'discovery_categories_itunes': MessageLookupByLibrary.simpleMessage('All,Arts,Business,Comedy,Education,Fiction,Government,Health & Fitness,History,Kids & Family,Leisure,Music,News,Religion & Spirituality,Science,Society & Culture,Sports,TV & Film,Technology,True Crime'),
     'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('All,After-Shows,Alternative,Animals,Animation,Arts,Astronomy,Automotive,Aviation,Baseball,Basketball,Beauty,Books,Buddhism,Business,Careers,Chemistry,Christianity,Climate,Comedy,Commentary,Courses,Crafts,Cricket,Cryptocurrency,Culture,Daily,Design,Documentary,Drama,Earth,Education,Entertainment,Entrepreneurship,Family,Fantasy,Fashion,Fiction,Film,Fitness,Food,Football,Games,Garden,Golf,Government,Health,Hinduism,History,Hobbies,Hockey,Home,HowTo,Improv,Interviews,Investing,Islam,Journals,Judaism,Kids,Language,Learning,Leisure,Life,Management,Manga,Marketing,Mathematics,Medicine,Mental,Music,Natural,Nature,News,NonProfit,Nutrition,Parenting,Performing,Personal,Pets,Philosophy,Physics,Places,Politics,Relationships,Religion,Reviews,Role-Playing,Rugby,Running,Science,Self-Improvement,Sexuality,Soccer,Social,Society,Spirituality,Sports,Stand-Up,Stories,Swimming,TV,Tabletop,Technology,Tennis,Travel,True Crime,Video-Games,Visual,Volleyball,Weather,Wilderness,Wrestling'),
+    'converting_episode_button_label': MessageLookupByLibrary.simpleMessage('Converting audio format'),
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('Download episode'),
     'downloads': MessageLookupByLibrary.simpleMessage('Downloads'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Your queue is empty'),
@@ -243,6 +246,13 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('Always'),
     'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Refresh podcasts'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Never'),
+    'settings_auto_download_episodes_label': MessageLookupByLibrary.simpleMessage('Auto-download new episodes'),
+    'settings_auto_download_episodes_subtitle': MessageLookupByLibrary.simpleMessage('Automatically download latest episodes when detected'),
+    'settings_auto_download_podcasts_label': MessageLookupByLibrary.simpleMessage('Choose podcasts to auto-download'),
+    'settings_auto_download_all_podcasts': MessageLookupByLibrary.simpleMessage('All subscribed podcasts'),
+    'settings_auto_download_selected_podcasts': m19,
+    'settings_auto_download_no_subscriptions': MessageLookupByLibrary.simpleMessage('No subscribed podcasts found. Please subscribe to podcasts first.'),
+    'settings_auto_download_select_all': MessageLookupByLibrary.simpleMessage('Select All'),
     'settings_background_refresh_mobile_data_option': MessageLookupByLibrary.simpleMessage('Refresh when on mobile data'),
     'settings_background_refresh_mobile_data_option_subtitle': MessageLookupByLibrary.simpleMessage('Allow the library to be refreshed when on mobile data'),
     'settings_background_refresh_option': MessageLookupByLibrary.simpleMessage('Background refresh'),
