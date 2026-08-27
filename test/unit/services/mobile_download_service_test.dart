@@ -6,16 +6,15 @@ import 'dart:io';
 
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
-import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/mp3_converter_service.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
-import 'package:anytime/services/notifications/notification_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../mocks/mock_notification_service.dart';
 import '../mocks/mock_path_provider.dart';
@@ -43,12 +42,20 @@ class _RecordingConverter extends Mp3ConverterService {
 class _FakeDownloadManager implements DownloadManager {
   /// Public so a test can push progress into the service through the manager.
   final BehaviorSubject<DownloadProgress> progress = BehaviorSubject<DownloadProgress>();
+  String? lastUrl;
+  String? lastDownloadPath;
+  String? lastFileName;
 
   @override
   Stream<DownloadProgress> get downloadProgress => progress;
 
   @override
-  Future<String?> enqueueTask(String url, String downloadPath, String fileName) async => 'task1';
+  Future<String?> enqueueTask(String url, String downloadPath, String fileName) async {
+    lastUrl = url;
+    lastDownloadPath = downloadPath;
+    lastFileName = fileName;
+    return 'task1';
+  }
 
   @override
   void dispose() {}
@@ -56,6 +63,7 @@ class _FakeDownloadManager implements DownloadManager {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
   PathProviderPlatform.instance = MockPathProvder();
 
   const dbName = 'anytime-download.db';
@@ -117,6 +125,46 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 100));
 
     expect(converter.calls, hasLength(1)); // only the previous 'task-on' call
+  });
+
+  test('downloadEpisode formats filename as YYYY-MM-DD_Title.mp3 and preserves Chinese characters', () async {
+    final episode = Episode(
+      guid: 'EP_chinese_test',
+      podcast: '硅谷101',
+      title: '第105期 具身智能的商业化黎明',
+      contentUrl: 'https://example.com/audio/test.mp3',
+      publicationDate: DateTime(2026, 8, 8),
+    );
+
+    final success = await service.downloadEpisode(episode);
+    expect(success, isTrue);
+    expect(manager.lastFileName, '2026-08-08_第105期 具身智能的商业化黎明.mp3');
+    expect(manager.lastDownloadPath, contains('硅谷101'));
+  });
+
+  test('downloadEpisode downloads into custom download root directory under podcast subfolder', () async {
+    final tempDir = Directory.systemTemp.createTempSync('custom_root_download');
+    try {
+      settings.customDownloadPath = tempDir.path;
+
+      final episode = Episode(
+        guid: 'EP_custom_dir_test',
+        podcast: '声东击西',
+        title: '何处安放的对话',
+        contentUrl: 'https://example.com/audio/sondong.mp3',
+        publicationDate: DateTime(2026, 8, 15),
+      );
+
+      final success = await service.downloadEpisode(episode);
+      expect(success, isTrue);
+      expect(manager.lastFileName, '2026-08-15_何处安放的对话.mp3');
+      expect(manager.lastDownloadPath, '${tempDir.path}/声东击西');
+    } finally {
+      if (tempDir.existsSync()) {
+        tempDir.deleteSync(recursive: true);
+      }
+      settings.customDownloadPath = '';
+    }
   });
 
   tearDownAll(() {

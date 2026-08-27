@@ -98,59 +98,74 @@ class MobileDownloadService extends DownloadService {
         await podcastService.saveEpisode(episode);
       }
 
-      final episodePath = await resolveDirectory(episode: episode);
-      final downloadPath = await resolveDirectory(episode: episode, full: true);
+      final episodePath = await resolveDirectory(episode: episode, settingsService: settingsService);
+      final downloadPath = await resolveDirectory(episode: episode, full: true, settingsService: settingsService);
       var uri = Uri.parse(episode.contentUrl!);
 
       // Ensure the download directory exists
-      await createDownloadDirectory(episode);
+      await createDownloadDirectory(episode, settingsService: settingsService);
 
-      // Filename should be last segment of URI.
-      var filename = safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.mp3')));
-
-      filename ??= safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.m4a')));
-
-      if (filename == null) {
-        //TODO: Handle unsupported format.
+      var ext = '.mp3';
+      final pathLower = uri.path.toLowerCase();
+      if (pathLower.endsWith('.m4a')) {
+        ext = '.m4a';
+      } else if (pathLower.endsWith('.aac')) {
+        ext = '.aac';
+      } else if (pathLower.endsWith('.wav')) {
+        ext = '.wav';
+      } else if (pathLower.endsWith('.ogg')) {
+        ext = '.ogg';
+      } else if (pathLower.endsWith('.mp3')) {
+        ext = '.mp3';
       } else {
-        // The last segment could also be a full URL. Take a second pass.
-        if (filename.contains('/')) {
-          try {
-            uri = Uri.parse(filename);
-            filename = uri.pathSegments.last;
-          } on FormatException {
-            // It wasn't a URL...
-          }
+        final seg = uri.pathSegments.lastWhereOrNull(
+          (e) => e.toLowerCase().contains('.mp3') || e.toLowerCase().contains('.m4a') || e.toLowerCase().contains('.aac'),
+        );
+        if (seg != null) {
+          if (seg.toLowerCase().contains('.m4a')) ext = '.m4a';
+          if (seg.toLowerCase().contains('.aac')) ext = '.aac';
+          if (seg.toLowerCase().contains('.mp3')) ext = '.mp3';
         }
-
-        // Some podcasts use the same file name for each episode. If we have a
-        // season and/or episode number provided by iTunes we can use that. We
-        // will also append the filename with the publication date if available.
-        var pubDate = '';
-
-        if (episode.publicationDate != null) {
-          pubDate = '${episode.publicationDate!.millisecondsSinceEpoch ~/ 1000}-';
-        }
-
-        filename = '$season$epno$pubDate$filename';
-
-        log.fine('Download episode (${episode.title}) $filename to $downloadPath/$filename');
-
-        final taskId = await downloadManager.enqueueTask(episode.contentUrl!, downloadPath, filename);
-
-        // Update the episode with download data
-        episode.filepath = episodePath;
-        episode.filename = filename;
-        episode.downloadTaskId = taskId;
-        episode.downloadState = DownloadState.downloading;
-        episode.downloadPercentage = 0;
-
-        await repository.saveEpisode(episode);
-
-        return true;
       }
 
-      return false;
+      // Build publication date prefix: YYYY-MM-DD
+      var pubDate = '';
+      if (episode.publicationDate != null) {
+        final d = episode.publicationDate!;
+        pubDate = '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+      }
+
+      // Format episode title, preserving Chinese and Unicode characters
+      var cleanTitle = safeFile(episode.title);
+      if (cleanTitle == null || cleanTitle == 'episode' || cleanTitle.isEmpty) {
+        final seg = uri.pathSegments.lastWhereOrNull((e) => e.isNotEmpty);
+        cleanTitle = safeFile(seg) ?? 'episode_${episode.id ?? "unknown"}';
+      }
+
+      if (cleanTitle.toLowerCase().endsWith(ext)) {
+        cleanTitle = cleanTitle.substring(0, cleanTitle.length - ext.length);
+      }
+
+      if (cleanTitle.length > 120) {
+        cleanTitle = cleanTitle.substring(0, 120).trim();
+      }
+
+      final filename = pubDate.isNotEmpty ? '${pubDate}_$cleanTitle$ext' : '$cleanTitle$ext';
+
+      log.fine('Download episode (${episode.title}) $filename to $downloadPath/$filename');
+
+      final taskId = await downloadManager.enqueueTask(episode.contentUrl!, downloadPath, filename);
+
+      // Update the episode with download data
+      episode.filepath = episodePath;
+      episode.filename = filename;
+      episode.downloadTaskId = taskId;
+      episode.downloadState = DownloadState.downloading;
+      episode.downloadPercentage = 0;
+
+      await repository.saveEpisode(episode);
+
+      return true;
     } catch (e, stack) {
       log.warning('Episode download failed (${episode.title})', e, stack);
       return false;
