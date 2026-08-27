@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -23,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 /// This is the settings page and allows the user to select various
@@ -114,6 +117,31 @@ class _SettingsState extends State<Settings> {
                           }
                         : null,
                   ),
+                ),
+              ),
+              MergeSemantics(
+                child: ListTile(
+                  shape: const RoundedRectangleBorder(side: BorderSide.none),
+                  title: Text(L.of(context)!.settings_custom_download_path_label),
+                  subtitle: Text(
+                    snapshot.data!.customDownloadPath.isNotEmpty
+                        ? snapshot.data!.customDownloadPath
+                        : L.of(context)!.settings_custom_download_path_default,
+                  ),
+                  trailing: snapshot.data!.customDownloadPath.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          tooltip: L.of(context)!.settings_custom_download_path_reset,
+                          onPressed: () {
+                            setState(() {
+                              settingsBloc.setCustomDownloadPath('');
+                            });
+                          },
+                        )
+                      : const Icon(Icons.folder_open),
+                  onTap: () async {
+                    await _pickCustomDownloadPath(settingsBloc);
+                  },
                 ),
               ),
               SettingsDividerLabel(label: L.of(context)!.settings_playback_divider_label),
@@ -275,6 +303,46 @@ class _SettingsState extends State<Settings> {
       ),
       child: Material(child: _buildList(context)),
     );
+  }
+
+  Future<void> _pickCustomDownloadPath(SettingsBloc settingsBloc) async {
+    if (Platform.isAndroid) {
+      var status = await Permission.manageExternalStorage.status;
+      if (!status.isGranted) {
+        final proceed = await showPlatformDialog<bool>(
+          context: context,
+          useRootNavigator: false,
+          builder: (_) => BasicDialogAlert(
+            title: Text(L.of(context)!.settings_custom_download_path_permission_title),
+            content: Text(L.of(context)!.settings_custom_download_path_permission_message),
+            actions: <Widget>[
+              BasicDialogAction(
+                title: Text(L.of(context)!.cancel_button_label),
+                onPressed: () => Navigator.pop(context, false),
+              ),
+              BasicDialogAction(
+                title: Text(L.of(context)!.ok_button_label),
+                onPressed: () => Navigator.pop(context, true),
+              ),
+            ],
+          ),
+        );
+
+        if (proceed != true) return;
+
+        status = await Permission.manageExternalStorage.request();
+        if (!status.isGranted) {
+          return;
+        }
+      }
+    }
+
+    final selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    if (selectedDirectory != null && selectedDirectory.isNotEmpty) {
+      setState(() {
+        settingsBloc.setCustomDownloadPath(selectedDirectory);
+      });
+    }
   }
 
   void _showStorageDialog({required bool enableExternalStorage}) {

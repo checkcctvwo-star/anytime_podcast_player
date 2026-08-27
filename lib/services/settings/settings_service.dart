@@ -33,6 +33,10 @@ abstract class SettingsService {
 
   set storeDownloadsSDCard(bool value);
 
+  String get customDownloadPath;
+
+  set customDownloadPath(String value);
+
   set playbackSpeed(double playbackSpeed);
 
   double get playbackSpeed;

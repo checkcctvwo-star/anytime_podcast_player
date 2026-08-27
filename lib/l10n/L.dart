@@ -475,6 +475,56 @@ class L {
         );
   }
 
+  String get settings_custom_download_path_label {
+    return message('settings_custom_download_path_label') ??
+        Intl.message(
+          'Custom download folder',
+          name: 'settings_custom_download_path_label',
+          desc: 'Label for custom download folder setting',
+          locale: localeName,
+        );
+  }
+
+  String get settings_custom_download_path_default {
+    return message('settings_custom_download_path_default') ??
+        Intl.message(
+          'Default',
+          name: 'settings_custom_download_path_default',
+          desc: 'Subtitle when custom download folder is set to default',
+          locale: localeName,
+        );
+  }
+
+  String get settings_custom_download_path_reset {
+    return message('settings_custom_download_path_reset') ??
+        Intl.message(
+          'Reset to default',
+          name: 'settings_custom_download_path_reset',
+          desc: 'Tooltip/button to reset custom download folder to default',
+          locale: localeName,
+        );
+  }
+
+  String get settings_custom_download_path_permission_title {
+    return message('settings_custom_download_path_permission_title') ??
+        Intl.message(
+          'Storage Permission Required',
+          name: 'settings_custom_download_path_permission_title',
+          desc: 'Title for storage permission dialog',
+          locale: localeName,
+        );
+  }
+
+  String get settings_custom_download_path_permission_message {
+    return message('settings_custom_download_path_permission_message') ??
+        Intl.message(
+          'To save downloads to a custom folder outside the app, Anytime requires All Files Access permission.',
+          name: 'settings_custom_download_path_permission_message',
+          desc: 'Message explaining need for all files access permission',
+          locale: localeName,
+        );
+  }
+
   String get settings_download_sd_card_label {
     return message('settings_download_sd_card_label') ??
         Intl.message(

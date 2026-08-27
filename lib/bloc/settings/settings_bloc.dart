@@ -38,6 +38,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _updateNotification = BehaviorSubject<bool>();
   final BehaviorSubject<String> _language = BehaviorSubject<String>();
   final BehaviorSubject<bool> _convertToMp3 = BehaviorSubject<bool>();
+  final BehaviorSubject<String> _customDownloadPath = BehaviorSubject<String>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -64,6 +65,7 @@ class SettingsBloc extends Bloc {
       markDeletedEpisodesAsPlayed: settingsService.markDeletedEpisodesAsPlayed,
       deleteDownloadedPlayedEpisodes: settingsService.deleteDownloadedPlayedEpisodes,
       storeDownloadsSDCard: settingsService.storeDownloadsSDCard,
+      customDownloadPath: settingsService.customDownloadPath,
       playbackSpeed: settingsService.playbackSpeed,
       searchProvider: settingsService.searchProvider,
       searchProviders: providers,
@@ -119,6 +121,12 @@ class SettingsBloc extends Bloc {
       _currentSettings = _currentSettings.copyWith(storeDownloadsSDCard: sdcard);
       _settings.add(_currentSettings);
       settingsService.storeDownloadsSDCard = sdcard;
+    });
+
+    _customDownloadPath.listen((String path) {
+      _currentSettings = _currentSettings.copyWith(customDownloadPath: path);
+      _settings.add(_currentSettings);
+      settingsService.customDownloadPath = path;
     });
 
     _playbackSpeed.listen((double speed) {
@@ -286,6 +294,8 @@ class SettingsBloc extends Bloc {
 
   void Function(bool) get updateNotification => _updateNotification.add;
 
+  void Function(String) get setCustomDownloadPath => _customDownloadPath.add;
+
   AppSettings get currentSettings => _settings.value;
 
   @override
@@ -294,6 +304,7 @@ class SettingsBloc extends Bloc {
     _markDeletedAsPlayed.close();
     _deleteDownloadedPlayedEpisodes.close();
     _storeDownloadOnSDCard.close();
+    _customDownloadPath.close();
     _playbackSpeed.close();
     _searchProvider.close();
     _externalLinkConsent.close();

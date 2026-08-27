@@ -50,6 +50,9 @@ class MockSettingsService extends SettingsService {
   bool storeDownloadsSDCard = false;
 
   @override
+  String customDownloadPath = '';
+
+  @override
   String theme = ThemeMode.dark.name;
 
   @override

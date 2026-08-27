@@ -58,6 +58,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  String get customDownloadPath => _sharedPreferences.getString('custom_download_path') ?? '';
+
+  @override
+  set customDownloadPath(String value) {
+    _sharedPreferences.setString('custom_download_path', value);
+    settingsNotifier.sink.add('custom_download_path');
+  }
+
+  @override
   String get theme => _sharedPreferences.getString('theme') ?? 'dark';
 
   @override

@@ -189,4 +189,11 @@ void main() {
     mobileSettingsService?.lastFeedRefresh = latest;
     expect(mobileSettingsService?.lastFeedRefresh, latest);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test custom download path', () async {
+    expect(mobileSettingsService?.customDownloadPath, '');
+    expectLater(settingsListener, emits('custom_download_path'));
+    mobileSettingsService?.customDownloadPath = '/custom/podcasts';
+    expect(mobileSettingsService?.customDownloadPath, '/custom/podcasts');
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }

@@ -23,6 +23,9 @@ class AppSettings {
   /// True if downloads should be saved to the SD card.
   final bool storeDownloadsSDCard;
 
+  /// Custom download root directory selected by user. Empty string means default.
+  final String customDownloadPath;
+
   /// The default playback speed.
   final double playbackSpeed;
 
@@ -81,6 +84,7 @@ class AppSettings {
     required this.markDeletedEpisodesAsPlayed,
     required this.deleteDownloadedPlayedEpisodes,
     required this.storeDownloadsSDCard,
+    this.customDownloadPath = '',
     required this.playbackSpeed,
     required this.searchProvider,
     required this.searchProviders,
@@ -107,6 +111,7 @@ class AppSettings {
         markDeletedEpisodesAsPlayed = false,
         deleteDownloadedPlayedEpisodes = false,
         storeDownloadsSDCard = false,
+        customDownloadPath = '',
         playbackSpeed = 1.0,
         searchProvider = 'itunes',
         searchProviders = <SearchProvider>[],
@@ -133,6 +138,7 @@ class AppSettings {
     bool? markDeletedEpisodesAsPlayed,
     bool? deleteDownloadedPlayedEpisodes,
     bool? storeDownloadsSDCard,
+    String? customDownloadPath,
     double? playbackSpeed,
     String? searchProvider,
     List<SearchProvider>? searchProviders,
@@ -158,6 +164,7 @@ class AppSettings {
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed ?? this.markDeletedEpisodesAsPlayed,
         deleteDownloadedPlayedEpisodes: deleteDownloadedPlayedEpisodes ?? this.deleteDownloadedPlayedEpisodes,
         storeDownloadsSDCard: storeDownloadsSDCard ?? this.storeDownloadsSDCard,
+        customDownloadPath: customDownloadPath ?? this.customDownloadPath,
         playbackSpeed: playbackSpeed ?? this.playbackSpeed,
         searchProvider: searchProvider ?? this.searchProvider,
         searchProviders: searchProviders ?? this.searchProviders,

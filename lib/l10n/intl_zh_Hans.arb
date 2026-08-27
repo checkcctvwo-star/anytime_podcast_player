@@ -257,6 +257,36 @@
     "type": "text",
     "placeholders": {}
   },
+  "settings_custom_download_path_label": "自定义下载目录",
+  "@settings_custom_download_path_label": {
+    "description": "Label for custom download folder setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_default": "默认",
+  "@settings_custom_download_path_default": {
+    "description": "Subtitle when custom download folder is set to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_reset": "恢复默认目录",
+  "@settings_custom_download_path_reset": {
+    "description": "Tooltip/button to reset custom download folder to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_title": "需要存储管理权限",
+  "@settings_custom_download_path_permission_title": {
+    "description": "Title for storage permission dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_message": "若要将播客音频保存至外部自定义文件夹，Anytime 需要“所有文件访问权限”。",
+  "@settings_custom_download_path_permission_message": {
+    "description": "Message explaining need for all files access permission",
+    "type": "text",
+    "placeholders": {}
+  },
   "settings_download_sd_card_label": "下载单集到 SD 卡",
   "@settings_download_sd_card_label": {
     "description": "Download episodes to SD card setting",

@@ -258,6 +258,36 @@
     "type": "text",
     "placeholders": {}
   },
+  "settings_custom_download_path_label": "Custom download folder",
+  "@settings_custom_download_path_label": {
+    "description": "Label for custom download folder setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_default": "Default",
+  "@settings_custom_download_path_default": {
+    "description": "Subtitle when custom download folder is set to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_reset": "Reset to default",
+  "@settings_custom_download_path_reset": {
+    "description": "Tooltip/button to reset custom download folder to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_title": "Storage Permission Required",
+  "@settings_custom_download_path_permission_title": {
+    "description": "Title for storage permission dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_message": "To save downloads to a custom folder outside the app, Anytime requires All Files Access permission.",
+  "@settings_custom_download_path_permission_message": {
+    "description": "Message explaining need for all files access permission",
+    "type": "text",
+    "placeholders": {}
+  },
   "settings_download_sd_card_label": "Download episodes to SD card",
   "@settings_download_sd_card_label": {
     "description": "Download episodes to SD card setting",
