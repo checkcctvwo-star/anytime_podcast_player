@@ -424,8 +424,8 @@ class _SettingsState extends State<Settings> {
     }
 
     final currentGuids = Set<String>.from(settings.autoDownloadPodcastGuids);
-    final selectedGuids = currentGuids.isEmpty
-        ? subscriptions.map((p) => p.guid).toSet()
+    final Set<String> selectedGuids = currentGuids.isEmpty
+        ? subscriptions.map((p) => p.guid).whereType<String>().toSet()
         : Set<String>.from(currentGuids);
 
     await showDialog<void>(
@@ -442,7 +442,7 @@ class _SettingsState extends State<Settings> {
                   itemCount: subscriptions.length,
                   itemBuilder: (context, index) {
                     final podcast = subscriptions[index];
-                    final isChecked = selectedGuids.contains(podcast.guid);
+                    final isChecked = podcast.guid != null && selectedGuids.contains(podcast.guid);
                     return CheckboxListTile(
                       title: Text(
                         podcast.title,
@@ -452,10 +452,12 @@ class _SettingsState extends State<Settings> {
                       value: isChecked,
                       onChanged: (bool? val) {
                         setDialogState(() {
-                          if (val == true) {
-                            selectedGuids.add(podcast.guid);
-                          } else {
-                            selectedGuids.remove(podcast.guid);
+                          if (podcast.guid != null) {
+                            if (val == true) {
+                              selectedGuids.add(podcast.guid!);
+                            } else {
+                              selectedGuids.remove(podcast.guid!);
+                            }
                           }
                         });
                       },
@@ -468,7 +470,7 @@ class _SettingsState extends State<Settings> {
                   child: Text(L.of(context)!.settings_auto_download_select_all),
                   onPressed: () {
                     setDialogState(() {
-                      selectedGuids.addAll(subscriptions.map((p) => p.guid));
+                      selectedGuids.addAll(subscriptions.map((p) => p.guid).whereType<String>());
                     });
                   },
                 ),
