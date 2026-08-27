@@ -146,9 +146,7 @@ class _DownloadsState extends State<Downloads> {
             const Spacer(),
             TextButton(
               child: Text(
-                allSelected
-                    ? L.of(context)!.multi_select_deselect_all
-                    : L.of(context)!.multi_select_select_all,
+                allSelected ? L.of(context)!.multi_select_deselect_all : L.of(context)!.multi_select_select_all,
               ),
               onPressed: () {
                 setState(() {
@@ -328,9 +326,7 @@ class _DownloadsState extends State<Downloads> {
               L.of(context)!.batch_action_delete,
               style: TextStyle(color: hasSelection ? Colors.red : Colors.grey),
             ),
-            onPressed: hasSelection
-                ? () => _confirmBatchDelete(context, episodeBloc, selectedEpisodes)
-                : null,
+            onPressed: hasSelection ? () => _confirmBatchDelete(context, episodeBloc, selectedEpisodes) : null,
           ),
           TextButton.icon(
             icon: Icon(Icons.playlist_add, color: hasSelection ? theme.primaryColor : Colors.grey),
@@ -338,9 +334,7 @@ class _DownloadsState extends State<Downloads> {
               L.of(context)!.batch_action_queue,
               style: TextStyle(color: hasSelection ? theme.primaryColor : Colors.grey),
             ),
-            onPressed: hasSelection
-                ? () => _batchAddToQueue(context, episodeBloc, selectedEpisodes)
-                : null,
+            onPressed: hasSelection ? () => _batchAddToQueue(context, episodeBloc, selectedEpisodes) : null,
           ),
           TextButton.icon(
             icon: Icon(Icons.done_all, color: hasSelection ? theme.primaryColor : Colors.grey),
@@ -348,9 +342,7 @@ class _DownloadsState extends State<Downloads> {
               L.of(context)!.batch_action_mark_played,
               style: TextStyle(color: hasSelection ? theme.primaryColor : Colors.grey),
             ),
-            onPressed: hasSelection
-                ? () => _batchTogglePlayed(context, episodeBloc, selectedEpisodes)
-                : null,
+            onPressed: hasSelection ? () => _batchTogglePlayed(context, episodeBloc, selectedEpisodes) : null,
           ),
         ],
       ),
@@ -513,48 +505,53 @@ class _TabButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        decoration: BoxDecoration(
-          color: selected ? theme.primaryColor.withOpacity(0.12) : Colors.transparent,
-          borderRadius: BorderRadius.circular(8.0),
-          border: selected
-              ? Border.all(color: theme.primaryColor.withOpacity(0.4), width: 1.5)
-              : Border.all(color: Colors.transparent, width: 1.5),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                color: selected ? theme.primaryColor : theme.textTheme.bodyMedium?.color,
-                fontSize: 14.0,
-              ),
-            ),
-            if (badgeCount > 0) ...[
-              const SizedBox(width: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: BoxDecoration(
-                  color: Colors.redAccent,
-                  borderRadius: BorderRadius.circular(10),
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: '$title${badgeCount > 0 ? ', $badgeCount' : ''}',
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          decoration: BoxDecoration(
+            color: selected ? theme.primaryColor.withOpacity(0.12) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8.0),
+            border: selected
+                ? Border.all(color: theme.primaryColor.withOpacity(0.4), width: 1.5)
+                : Border.all(color: Colors.transparent, width: 1.5),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                  color: selected ? theme.primaryColor : theme.textTheme.bodyMedium?.color,
+                  fontSize: 14.0,
                 ),
-                child: Text(
-                  '$badgeCount',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
+              ),
+              if (badgeCount > 0) ...[
+                const SizedBox(width: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '$badgeCount',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -600,44 +597,48 @@ class _SelectableEpisodeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      onTap: onToggle,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Row(
-          children: [
-            Checkbox(
-              value: isSelected,
-              onChanged: (_) => onToggle(),
-            ),
-            TileImage(
-              url: episode.thumbImageUrl ?? episode.imageUrl ?? '',
-              size: 48.0,
-            ),
-            const SizedBox(width: 12.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    episode.title ?? '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Text(
-                    episode.podcast ?? '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ],
+    return Semantics(
+      selected: isSelected,
+      label: '${episode.title ?? ''}, ${episode.podcast ?? ''}',
+      child: InkWell(
+        onTap: onToggle,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            children: [
+              Checkbox(
+                value: isSelected,
+                onChanged: (_) => onToggle(),
               ),
-            ),
-          ],
+              TileImage(
+                url: episode.thumbImageUrl ?? episode.imageUrl ?? '',
+                size: 48.0,
+              ),
+              const SizedBox(width: 12.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      episode.title ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    Text(
+                      episode.podcast ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -63,13 +63,19 @@ void main() {
     test('builds ffmpeg args transcoding to mp3 with id3 defaults', () {
       final args = buildMp3ConversionArgs('/in.m4a', '/out.mp3');
       expect(args, [
-        '-i', '/in.m4a',
+        '-i',
+        '/in.m4a',
         '-vn',
-        '-acodec', 'libmp3lame',
-        '-b:a', '192k',
-        '-id3v2_version', '3',
-        '-write_id3v1', '1',
-        '-y', '/out.mp3',
+        '-acodec',
+        'libmp3lame',
+        '-b:a',
+        '192k',
+        '-id3v2_version',
+        '3',
+        '-write_id3v1',
+        '1',
+        '-y',
+        '/out.mp3',
       ]);
     });
 

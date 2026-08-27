@@ -2580,35 +2580,233 @@ class L {
         );
   }
 
-  String get downloads_tab_downloaded => message('downloads_tab_downloaded') ?? 'Downloaded';
-  String get downloads_tab_active => message('downloads_tab_active') ?? 'Downloading';
-  String get active_downloads_empty_message => message('active_downloads_empty_message') ?? 'No active downloads or transcoding tasks';
-  String get batch_action_delete => message('batch_action_delete') ?? 'Delete';
-  String get batch_action_queue => message('batch_action_queue') ?? 'Add to Queue';
-  String get batch_action_mark_played => message('batch_action_mark_played') ?? 'Mark Played';
-  String get batch_action_mark_unplayed => message('batch_action_mark_unplayed') ?? 'Mark Unplayed';
-  String get batch_delete_dialog_title => message('batch_delete_dialog_title') ?? 'Delete Episodes';
-  String get batch_delete_dialog_message => message('batch_delete_dialog_message') ?? 'Are you sure you want to delete the selected downloaded episodes?';
-  String get batch_add_to_queue_success => message('batch_add_to_queue_success') ?? 'Added selected episodes to queue';
-  String get download_action_pause => message('download_action_pause') ?? 'Pause';
-  String get download_action_resume => message('download_action_resume') ?? 'Resume';
-  String get download_action_retry => message('download_action_retry') ?? 'Retry';
-  String get download_action_cancel => message('download_action_cancel') ?? 'Cancel';
-  String get download_status_queued => message('download_status_queued') ?? 'Queued';
-  String get download_status_downloading => message('download_status_downloading') ?? 'Downloading';
-  String get download_status_converting => message('download_status_converting') ?? 'Converting';
-  String get download_status_paused => message('download_status_paused') ?? 'Paused';
-  String get download_status_failed => message('download_status_failed') ?? 'Failed';
-  String get multi_select_select_all => message('multi_select_select_all') ?? 'Select All';
-  String get multi_select_deselect_all => message('multi_select_deselect_all') ?? 'Deselect All';
-  String get multi_select_exit => message('multi_select_exit') ?? 'Exit';
+  String get downloads_tab_downloaded {
+    return message('downloads_tab_downloaded') ??
+        Intl.message(
+          'Downloaded',
+          name: 'downloads_tab_downloaded',
+          desc: 'Tab label for downloaded episodes',
+          locale: localeName,
+        );
+  }
+
+  String get downloads_tab_active {
+    return message('downloads_tab_active') ??
+        Intl.message(
+          'Downloading',
+          name: 'downloads_tab_active',
+          desc: 'Tab label for active downloads queue',
+          locale: localeName,
+        );
+  }
+
+  String get active_downloads_empty_message {
+    return message('active_downloads_empty_message') ??
+        Intl.message(
+          'No active downloads or transcoding tasks',
+          name: 'active_downloads_empty_message',
+          desc: 'Message shown when there are no active downloads or transcode tasks',
+          locale: localeName,
+        );
+  }
+
+  String get batch_action_delete {
+    return message('batch_action_delete') ??
+        Intl.message(
+          'Delete',
+          name: 'batch_action_delete',
+          desc: 'Button label to delete selected episodes in batch mode',
+          locale: localeName,
+        );
+  }
+
+  String get batch_action_queue {
+    return message('batch_action_queue') ??
+        Intl.message(
+          'Add to Queue',
+          name: 'batch_action_queue',
+          desc: 'Button label to add selected episodes to playback queue',
+          locale: localeName,
+        );
+  }
+
+  String get batch_action_mark_played {
+    return message('batch_action_mark_played') ??
+        Intl.message(
+          'Mark Played',
+          name: 'batch_action_mark_played',
+          desc: 'Button label to mark selected episodes as played',
+          locale: localeName,
+        );
+  }
+
+  String get batch_action_mark_unplayed {
+    return message('batch_action_mark_unplayed') ??
+        Intl.message(
+          'Mark Unplayed',
+          name: 'batch_action_mark_unplayed',
+          desc: 'Button label to mark selected episodes as unplayed',
+          locale: localeName,
+        );
+  }
+
+  String get batch_delete_dialog_title {
+    return message('batch_delete_dialog_title') ??
+        Intl.message(
+          'Delete Episodes',
+          name: 'batch_delete_dialog_title',
+          desc: 'Title for batch delete confirmation dialog',
+          locale: localeName,
+        );
+  }
+
+  String get batch_delete_dialog_message {
+    return message('batch_delete_dialog_message') ??
+        Intl.message(
+          'Are you sure you want to delete the selected downloaded episodes?',
+          name: 'batch_delete_dialog_message',
+          desc: 'Message for batch delete confirmation dialog',
+          locale: localeName,
+        );
+  }
+
+  String get batch_add_to_queue_success {
+    return message('batch_add_to_queue_success') ??
+        Intl.message(
+          'Added selected episodes to queue',
+          name: 'batch_add_to_queue_success',
+          desc: 'Snackbar message when episodes are added to queue',
+          locale: localeName,
+        );
+  }
+
+  String get download_action_pause {
+    return message('download_action_pause') ??
+        Intl.message(
+          'Pause',
+          name: 'download_action_pause',
+          desc: 'Tooltip/label for pause download button',
+          locale: localeName,
+        );
+  }
+
+  String get download_action_resume {
+    return message('download_action_resume') ??
+        Intl.message(
+          'Resume',
+          name: 'download_action_resume',
+          desc: 'Tooltip/label for resume download button',
+          locale: localeName,
+        );
+  }
+
+  String get download_action_retry {
+    return message('download_action_retry') ??
+        Intl.message(
+          'Retry',
+          name: 'download_action_retry',
+          desc: 'Tooltip/label for retry download button',
+          locale: localeName,
+        );
+  }
+
+  String get download_action_cancel {
+    return message('download_action_cancel') ??
+        Intl.message(
+          'Cancel',
+          name: 'download_action_cancel',
+          desc: 'Tooltip/label for cancel download button',
+          locale: localeName,
+        );
+  }
+
+  String get download_status_queued {
+    return message('download_status_queued') ??
+        Intl.message(
+          'Queued',
+          name: 'download_status_queued',
+          desc: 'Status text for queued download task',
+          locale: localeName,
+        );
+  }
+
+  String get download_status_downloading {
+    return message('download_status_downloading') ??
+        Intl.message(
+          'Downloading',
+          name: 'download_status_downloading',
+          desc: 'Status text for downloading task',
+          locale: localeName,
+        );
+  }
+
+  String get download_status_converting {
+    return message('download_status_converting') ??
+        Intl.message(
+          'Converting',
+          name: 'download_status_converting',
+          desc: 'Status text for audio converting task',
+          locale: localeName,
+        );
+  }
+
+  String get download_status_paused {
+    return message('download_status_paused') ??
+        Intl.message(
+          'Paused',
+          name: 'download_status_paused',
+          desc: 'Status text for paused download task',
+          locale: localeName,
+        );
+  }
+
+  String get download_status_failed {
+    return message('download_status_failed') ??
+        Intl.message(
+          'Failed',
+          name: 'download_status_failed',
+          desc: 'Status text for failed download task',
+          locale: localeName,
+        );
+  }
+
+  String get multi_select_select_all {
+    return message('multi_select_select_all') ??
+        Intl.message(
+          'Select All',
+          name: 'multi_select_select_all',
+          desc: 'Button label to select all items in multi-select mode',
+          locale: localeName,
+        );
+  }
+
+  String get multi_select_deselect_all {
+    return message('multi_select_deselect_all') ??
+        Intl.message(
+          'Deselect All',
+          name: 'multi_select_deselect_all',
+          desc: 'Button label to deselect all items in multi-select mode',
+          locale: localeName,
+        );
+  }
+
+  String get multi_select_exit {
+    return message('multi_select_exit') ??
+        Intl.message(
+          'Exit',
+          name: 'multi_select_exit',
+          desc: 'Tooltip/label to exit multi-select mode',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
   const AnytimeLocalisationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh', 'zh_Hans'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh', 'zh_Hans'].contains(locale.languageCode);
 
   @override
   Future<L> load(Locale locale) => L.load(locale, const {});
@@ -2631,7 +2829,8 @@ class EmbeddedLocalisationsDelegate extends LocalizationsDelegate<L> {
   EmbeddedLocalisationsDelegate({@required this.messages = const {}});
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh', 'zh_Hans'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'tr', 'vi', 'zh', 'zh_Hans'].contains(locale.languageCode);
 
   @override
   Future<L> load(Locale locale) => L.load(locale, messages);

@@ -120,7 +120,8 @@ class MobileDownloadService extends DownloadService {
         ext = '.mp3';
       } else {
         final seg = uri.pathSegments.lastWhereOrNull(
-          (e) => e.toLowerCase().contains('.mp3') || e.toLowerCase().contains('.m4a') || e.toLowerCase().contains('.aac'),
+          (e) =>
+              e.toLowerCase().contains('.mp3') || e.toLowerCase().contains('.m4a') || e.toLowerCase().contains('.aac'),
         );
         if (seg != null) {
           if (seg.toLowerCase().contains('.m4a')) ext = '.m4a';
@@ -133,7 +134,8 @@ class MobileDownloadService extends DownloadService {
       var pubDate = '';
       if (episode.publicationDate != null) {
         final d = episode.publicationDate!;
-        pubDate = '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+        pubDate =
+            '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
       }
 
       // Format episode title, preserving Chinese and Unicode characters
@@ -203,7 +205,8 @@ class MobileDownloadService extends DownloadService {
     try {
       final filename = await resolvePath(episode);
       final file = File(filename);
-      if (await file.exists() && (episode.downloadState == DownloadState.converting || episode.downloadPercentage == 100)) {
+      if (await file.exists() &&
+          (episode.downloadState == DownloadState.converting || episode.downloadPercentage == 100)) {
         episode.downloadState = DownloadState.converting;
         episode.downloadPercentage = 0;
         await repository.saveEpisode(episode);

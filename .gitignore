@@ -76,3 +76,4 @@ coverage/
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 build_artifacts/
+build_artifacts_latest/

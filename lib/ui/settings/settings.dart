@@ -214,8 +214,8 @@ class _SettingsState extends State<Settings> {
                       snapshot.data!.autoDownloadPodcastGuids.isEmpty
                           ? L.of(context)!.settings_auto_download_all_podcasts
                           : L.of(context)!.settings_auto_download_selected_podcasts(
-                              snapshot.data!.autoDownloadPodcastGuids.length,
-                            ),
+                                snapshot.data!.autoDownloadPodcastGuids.length,
+                              ),
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _showPodcastSelectionDialog(context, settingsBloc, snapshot.data!),

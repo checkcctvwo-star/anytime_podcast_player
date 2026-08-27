@@ -12,8 +12,7 @@ import 'package:path/path.dart' as p;
 
 /// Returns true if [path] already points to an MP3 file (by extension,
 /// case-insensitive).
-bool isMp3Extension(String path) =>
-    p.extension(path).toLowerCase() == '.mp3';
+bool isMp3Extension(String path) => p.extension(path).toLowerCase() == '.mp3';
 
 /// Returns the path where the MP3 counterpart of [sourcePath] would live,
 /// replacing the existing extension with `.mp3`.
@@ -37,10 +36,13 @@ List<String> buildMp3ConversionArgs(
   String? year,
 }) {
   final args = [
-    '-i', source,
+    '-i',
+    source,
     '-vn',
-    '-acodec', 'libmp3lame',
-    '-b:a', '192k',
+    '-acodec',
+    'libmp3lame',
+    '-b:a',
+    '192k',
   ];
 
   if (title != null && title.trim().isNotEmpty) {
@@ -57,9 +59,12 @@ List<String> buildMp3ConversionArgs(
   }
 
   args.addAll([
-    '-id3v2_version', '3',
-    '-write_id3v1', '1',
-    '-y', target,
+    '-id3v2_version',
+    '3',
+    '-write_id3v1',
+    '1',
+    '-y',
+    target,
   ]);
 
   return args;

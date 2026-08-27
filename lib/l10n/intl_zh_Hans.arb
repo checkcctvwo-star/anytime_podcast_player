@@ -1555,5 +1555,137 @@
     "description": "Settings auto MP3 conversion option",
     "type": "text",
     "placeholders": {}
+  },
+  "downloads_tab_downloaded": "已下载",
+  "@downloads_tab_downloaded": {
+    "description": "Tab label for downloaded episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads_tab_active": "下载中",
+  "@downloads_tab_active": {
+    "description": "Tab label for active downloads queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "active_downloads_empty_message": "暂无正在下载或转码的单集",
+  "@active_downloads_empty_message": {
+    "description": "Message shown when there are no active downloads or transcode tasks",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_delete": "批量删除",
+  "@batch_action_delete": {
+    "description": "Button label to delete selected episodes in batch mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_queue": "加到队列",
+  "@batch_action_queue": {
+    "description": "Button label to add selected episodes to playback queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_mark_played": "标记已听",
+  "@batch_action_mark_played": {
+    "description": "Button label to mark selected episodes as played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_mark_unplayed": "标记未听",
+  "@batch_action_mark_unplayed": {
+    "description": "Button label to mark selected episodes as unplayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_delete_dialog_title": "批量删除",
+  "@batch_delete_dialog_title": {
+    "description": "Title for batch delete confirmation dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_delete_dialog_message": "确定删除选中的已下载单集吗？此操作不可撤回。",
+  "@batch_delete_dialog_message": {
+    "description": "Message for batch delete confirmation dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_add_to_queue_success": "已添加到播放队列",
+  "@batch_add_to_queue_success": {
+    "description": "Snackbar message when episodes are added to queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_pause": "暂停",
+  "@download_action_pause": {
+    "description": "Tooltip/label for pause download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_resume": "继续",
+  "@download_action_resume": {
+    "description": "Tooltip/label for resume download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_retry": "重试",
+  "@download_action_retry": {
+    "description": "Tooltip/label for retry download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_cancel": "取消",
+  "@download_action_cancel": {
+    "description": "Tooltip/label for cancel download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_queued": "排队中",
+  "@download_status_queued": {
+    "description": "Status text for queued download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_downloading": "下载中",
+  "@download_status_downloading": {
+    "description": "Status text for downloading task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_converting": "转码中",
+  "@download_status_converting": {
+    "description": "Status text for audio converting task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_paused": "已暂停",
+  "@download_status_paused": {
+    "description": "Status text for paused download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_failed": "失败",
+  "@download_status_failed": {
+    "description": "Status text for failed download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_select_all": "全选",
+  "@multi_select_select_all": {
+    "description": "Button label to select all items in multi-select mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_deselect_all": "取消全选",
+  "@multi_select_deselect_all": {
+    "description": "Button label to deselect all items in multi-select mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_exit": "退出",
+  "@multi_select_exit": {
+    "description": "Tooltip/label to exit multi-select mode",
+    "type": "text",
+    "placeholders": {}
   }
 }
